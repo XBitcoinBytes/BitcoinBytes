@@ -1,0 +1,63 @@
+================================================================================
+COMPREHENSIVE WEBSITE ANALYSIS REPORT
+================================================================================
+
+Analysis Date: 2025-06-11T11:14:34.302031
+Target URL: http://localhost:5000
+
+OVERALL SCORES
+----------------------------------------
+SEO Score: 85/100
+Security Score: 85/100
+Performance Score: 100/100
+Overall Score: 90.0/100
+
+ISSUES FOUND
+----------------------------------------
+High Priority: 0 issues
+Medium Priority: 2 issues
+Low Priority: 0 issues
+
+[MEDIUM] SEO: Missing H1 tag
+  Description: Page lacks primary heading (H1) for content structure
+
+[MEDIUM] Security: JavaScript: document.write() usage detected
+  Description: Potentially unsafe JavaScript pattern detected
+
+RECOMMENDATIONS
+----------------------------------------
+1. Add H1 tag with primary page topic
+
+DETAILED ANALYSIS
+----------------------------------------
+Performance:
+  Load Time: 0.009s
+  Status Code: 200
+  Content Length: 45560 bytes
+
+SEO Elements:
+  Title Tag: ✓
+  Meta Description: ✓
+  H1 Tags: 0
+  Meta Viewport: ✓
+
+Security Headers:
+  strict-transport-security: ✓
+  content-security-policy: ✓
+  x-frame-options: ✓
+  x-content-type-options: ✓
+  x-xss-protection: ✓
+  referrer-policy: ✓
+  permissions-policy: ✓
+
+API Endpoints Status:
+  /api/prices/comparison: HTTP 200 (0.008s)
+  /api/news: HTTP 200 (0.004s)
+  /api/charts/bitcoin-history: HTTP 200 (0.062s)
+  /api/network/stats: HTTP 200 (0.353s)
+  /api/market/data: HTTP 200 (0.263s)
+  /api/ai/intelligence: HTTP 200 (0.003s)
+  /api/whale/activity: HTTP 200 (0.003s)
+
+================================================================================
+End of Report

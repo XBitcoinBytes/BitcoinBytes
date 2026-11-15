@@ -99,7 +99,6 @@ ehthumbs.db
 Thumbs.db
 
 # Replit specific
-.replit
 .replit.nix
 replit.nix
 
@@ -122,5 +121,4 @@ drizzle/
 
 # Local development files
 bitcoin_news.log
-website_analysis_report.txt
 *.md.backup
