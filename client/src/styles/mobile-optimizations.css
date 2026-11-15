@@ -1,0 +1,72 @@
+/* Mobile Performance Optimizations for Phase 2B */
+
+.mobile-optimized {
+  /* Reduce transform and animation complexity on mobile */
+  --animation-duration: 0.2s;
+  --transition-duration: 0.15s;
+}
+
+/* Mobile-first responsive design optimizations */
+@media (max-width: 768px) {
+  /* Reduce shadows and gradients for better performance */
+  .mobile-optimized .epic-float {
+    transform: none;
+    animation: none;
+  }
+  
+  /* Optimize viewport handling */
+  .mobile-optimized {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Reduce particle effects on mobile */
+  .mobile-optimized .particle-background {
+    opacity: 0.3;
+  }
+  
+  /* Optimize image rendering */
+  .mobile-optimized img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Touch-friendly interactions */
+  .mobile-optimized button,
+  .mobile-optimized [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .mobile-optimized {
+    --animation-duration: 0.25s;
+    --transition-duration: 0.2s;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1024px) {
+  .mobile-optimized {
+    --animation-duration: 0.3s;
+    --transition-duration: 0.25s;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-optimized * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode optimizations */
+@media (prefers-contrast: high) {
+  .mobile-optimized {
+    filter: contrast(1.2);
+  }
+}

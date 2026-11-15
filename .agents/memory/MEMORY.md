@@ -1,0 +1,3 @@
+- [Comparison engine architecture](comparison-engine.md) — 3 rankable providers (Kraken/Crypto.com/Binance.US), 6 permanent unranked; min-3 gate for winner
+- [Data integrity rule](data-integrity.md) — no Math.random() anywhere in comparison path; stale TTL=90s, hard cutoff=6min; fewer than 3 ranked → no winner, degraded notice
+- [Test setup](test-setup.md) — vitest 4.x, 45 tests in server/comparison/__tests__/; `npm test` runs them; all pre-existing client TS errors are legacy, not in new code
