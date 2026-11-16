@@ -8,7 +8,7 @@ interface PageMeta {
 }
 
 const SITE_NAME = 'BitcoinBytes';
-const BASE_URL = 'https://xbitcoinbytes.com';
+const BASE_URL = 'https://bitcoinbytes.org';
 
 export function usePageMeta({ title, description, canonical, ogType = 'website' }: PageMeta) {
   useEffect(() => {

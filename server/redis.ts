@@ -1,5 +1,4 @@
 import Redis from 'ioredis';
-import { priceConfig } from './priceConfig';
 
 /**
  * Redis Cache Manager for High-Performance Bitcoin Platform
