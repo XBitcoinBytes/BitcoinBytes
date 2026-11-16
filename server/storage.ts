@@ -127,12 +127,12 @@ export class MemStorage implements IStorage {
 
     // Initialize with real price data from CoinGecko
     this.initializeLivePrices();
-    this.generateInitialNews();
+    // Seed articles were fictional; only fetched news should be published.
   }
 
   private async initializeLivePrices() {
     try {
-      await this.updatePricesFromCoordinator();
+      await this.getCurrentPrices();
       console.log('Successfully initialized with coordinated live Bitcoin prices');
     } catch (error) {
       console.warn('Failed to initialize with live prices, falling back to mock data:', error);
@@ -141,27 +141,7 @@ export class MemStorage implements IStorage {
   }
 
   private generateInitialPrices() {
-    const basePrice = 107000;
-    const exchangeIds = Array.from(this.exchanges.keys());
-    
-    exchangeIds.forEach(exchangeId => {
-      const priceVariation = (Math.random() - 0.5) * 100;
-      const price = basePrice + priceVariation;
-      const volume = Math.random() * 5000000000; // Random volume up to 5B
-      const change = (Math.random() - 0.5) * 5; // Random change ±2.5%
-      const spread = Math.random() * 0.2; // Random spread up to 0.2%
-      
-      const priceId = this.currentId++;
-      this.prices.set(priceId, {
-        id: priceId,
-        exchangeId,
-        price: price.toFixed(8),
-        volume24h: volume.toFixed(2),
-        change24h: change.toFixed(4),
-        spread: spread.toFixed(4),
-        timestamp: new Date()
-      });
-    });
+    // No fabricated initial quotes.
   }
 
   private generateInitialNews() {
@@ -439,298 +419,13 @@ export class MemStorage implements IStorage {
   }
 
   async getCurrentPrices(): Promise<ExchangePriceData[]> {
-    try {
-      // Use centralized price service to avoid rate limiting
-      const centralizedPrices = await priceService.getCurrentPrices();
-      
-      // Update our internal price storage with fresh data
-      for (const [exchangeName, priceData] of centralizedPrices) {
-        const exchange = Array.from(this.exchanges.values()).find(ex => ex.name === exchangeName);
-        if (exchange) {
-          const bitcoinPrice: BitcoinPrice = {
-            id: this.currentId++,
-            exchangeId: exchange.id,
-            price: priceData.price.toString(),
-            volume24h: priceData.volume24h.toString(),
-            change24h: priceData.change24h.toString(),
-            spread: null,
-            timestamp: priceData.timestamp
-          };
-          
-          this.latestPricesByExchange.set(exchange.id, bitcoinPrice);
-        }
-      }
-      
-      this.lastPriceUpdate = new Date();
-      this.invalidateCache();
-    } catch (error) {
-      console.error('Failed to update prices from price service, using cached data:', error);
-    }
-
-    // ABSOLUTE GUARANTEE: Return exactly 9 exchanges for 3x3 symmetry
-    const exchangeData: ExchangePriceData[] = [];
-    
-    // Get the first 9 unique exchanges by processing in strict order
-    const processedExchanges = new Set<string>();
-    const targetOrder = ['coinbase', 'binance', 'kraken', 'robinhood', 'crypto.com', 'gemini', 'river', 'bitfinex', 'strike'];
-    
-    for (const targetName of targetOrder) {
-      if (exchangeData.length >= 9) break;
-      if (processedExchanges.has(targetName)) continue;
-      
-      // Find the exchange
-      const exchange = Array.from(this.exchanges.values()).find(ex => ex.name === targetName && ex.isActive);
-      if (!exchange) continue;
-      
-      // Get price data from real API first
-      let latestPrice = this.latestPricesByExchange.get(exchange.id);
-      if (!latestPrice) {
-        latestPrice = Array.from(this.prices.values())
-          .filter(p => p.exchangeId === exchange.id)
-          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
-      }
-
-      if (latestPrice) {
-        exchangeData.push({
-          exchange,
-          currentPrice: latestPrice
-        });
-        processedExchanges.add(targetName);
-      }
-    }
-    
-    // Ensure exactly 9 - truncate if somehow more
-    if (exchangeData.length > 9) {
-      exchangeData.splice(9);
-    }
-
-    // Mark best price
-    if (exchangeData.length > 0) {
-      const bestPrice = exchangeData.reduce((best, current) => 
-        parseFloat(current.currentPrice.price) < parseFloat(best.currentPrice.price) ? current : best
-      );
-      bestPrice.isBestPrice = true;
-    }
-
-    return exchangeData;
-  }
-
-  private invalidateCache(): void {
-    this.latestPricesByExchange.clear();
-    this.cachedPriceComparison = null;
-    this.cacheTimestamp = null;
-    
-    // Clear duplicate price entries to prevent exchange duplication
-    const exchangeIds = new Set<number>();
-    const pricesToKeep = new Map<number, BitcoinPrice>();
-    
-    // Keep only the latest price for each exchange
-    Array.from(this.prices.entries()).forEach(([priceId, price]) => {
-      if (!exchangeIds.has(price.exchangeId)) {
-        exchangeIds.add(price.exchangeId);
-        pricesToKeep.set(priceId, price);
-      }
-    });
-    
-    this.prices.clear();
-    Array.from(pricesToKeep.entries()).forEach(([priceId, price]) => {
-      this.prices.set(priceId, price);
+    const quotes = await priceService.getCurrentPrices();
+    return Array.from(quotes.values()).flatMap(q => {
+      const exchange = Array.from(this.exchanges.values()).find(e => e.name === q.exchange);
+      return exchange ? [{ exchange, currentPrice: { id: exchange.id, exchangeId: exchange.id,
+        price: String(q.price), volume24h: null, change24h: null, spread: null, timestamp: q.timestamp } }] : [];
     });
   }
-
-  /**
-   * New coordinated price update method using Smart Price Coordinator
-   */
-  private async updatePricesFromCoordinator(): Promise<void> {
-    try {
-      const { priceCoordinator } = await import('./priceCoordinator.js');
-      
-      // Check if coordinator should update
-      if (!priceCoordinator.shouldUpdate()) {
-        console.log('Price coordinator update not needed yet');
-        return;
-      }
-
-      console.log('Updating Bitcoin prices via Price Coordinator...');
-      const exchangePrices = await priceCoordinator.coordinateExchangeUpdates();
-      
-      if (!exchangePrices || exchangePrices.length === 0) {
-        throw new Error('No exchange data received from coordinator');
-      }
-
-      // Update storage with coordinated prices
-      for (const exchangePrice of exchangePrices) {
-        const exchange = Array.from(this.exchanges.values()).find(
-          ex => ex.name && exchangePrice.exchange && 
-          ex.name.toLowerCase() === exchangePrice.exchange.toLowerCase()
-        );
-
-        if (exchange) {
-          const bitcoinPrice: BitcoinPrice = {
-            id: this.currentId++,
-            exchangeId: exchange.id,
-            price: exchangePrice.price.toFixed(8),
-            volume24h: exchangePrice.volume24h.toFixed(2),
-            change24h: exchangePrice.change24h.toFixed(4),
-            spread: '0.0100', // Default spread
-            timestamp: exchangePrice.timestamp
-          };
-
-          this.prices.set(bitcoinPrice.id, bitcoinPrice);
-          this.latestPricesByExchange.set(exchange.id, bitcoinPrice);
-        }
-      }
-
-      this.invalidateCache();
-      console.log(`✅ Successfully updated ${exchangePrices.length} exchange prices via coordinator`);
-      
-    } catch (error) {
-      console.error('Error updating prices from coordinator:', error);
-      throw error;
-    }
-  }
-
-  private async updatePricesFromCoinGecko(): Promise<void> {
-    try {
-      console.log('Fetching live Bitcoin prices from CoinGecko...');
-      const livePrices = await coinGeckoService.getExchangePrices();
-      
-      // Clean old prices (keep only last hour)
-      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-      for (const [id, price] of Array.from(this.prices.entries())) {
-        if (new Date(price.timestamp) < oneHourAgo) {
-          this.prices.delete(id);
-        }
-      }
-      
-      // Update prices for each exchange
-      for (const livePrice of livePrices) {
-        const exchange = Array.from(this.exchanges.values())
-          .find(e => e.name === livePrice.exchangeName);
-          
-        if (exchange) {
-          const priceId = this.currentId++;
-          const bitcoinPrice: BitcoinPrice = {
-            id: priceId,
-            exchangeId: exchange.id,
-            price: livePrice.price.toFixed(8),
-            volume24h: livePrice.volume24h.toFixed(2),
-            change24h: livePrice.change24h.toFixed(4),
-            spread: livePrice.spread.toFixed(4),
-            timestamp: livePrice.timestamp
-          };
-          
-          this.prices.set(priceId, bitcoinPrice);
-        }
-      }
-      
-      console.log(`Updated prices for ${livePrices.length} exchanges from CoinGecko`);
-      
-      // Fill in missing exchanges with CryptoCompare data
-      await this.updateMissingPricesFromCryptoCompare();
-      
-      // CRITICAL: Ensure exactly 9 exchanges always have prices
-      await this.ensureAllExchangesHavePrices();
-      
-    } catch (error) {
-      console.error('Error updating prices from CoinGecko:', error);
-      throw error;
-    }
-  }
-
-  private async ensureAllExchangesHavePrices(): Promise<void> {
-    // Get all 9 exchanges
-    const allExchanges = Array.from(this.exchanges.values());
-    
-    // Find exchanges without recent prices
-    const exchangesWithPrices = new Set<number>();
-    for (const price of this.prices.values()) {
-      exchangesWithPrices.add(price.exchangeId);
-    }
-    
-    const exchangesNeedingPrices = allExchanges.filter(ex => !exchangesWithPrices.has(ex.id));
-    
-    if (exchangesNeedingPrices.length > 0) {
-      console.log(`Generating backup prices for ${exchangesNeedingPrices.length} exchanges to ensure 9 total`);
-      
-      // Get base price from existing exchanges or use market average
-      let basePrice = 67420; // Market-realistic base price
-      const existingPrices = Array.from(this.prices.values());
-      if (existingPrices.length > 0) {
-        const avgPrice = existingPrices.reduce((sum, p) => sum + parseFloat(p.price), 0) / existingPrices.length;
-        basePrice = avgPrice;
-      }
-      
-      // Generate realistic prices for missing exchanges
-      for (const exchange of exchangesNeedingPrices) {
-        const priceVariation = (Math.random() - 0.5) * 200; // ±$100 variation
-        const price = basePrice + priceVariation;
-        const volume = Math.random() * 2000000000; // Realistic volume
-        const change = (Math.random() - 0.5) * 4; // ±2% change
-        const spread = Math.random() * 0.15; // Realistic spread
-        
-        const priceId = this.currentId++;
-        const bitcoinPrice: BitcoinPrice = {
-          id: priceId,
-          exchangeId: exchange.id,
-          price: price.toFixed(8),
-          volume24h: volume.toFixed(2),
-          change24h: change.toFixed(4),
-          spread: spread.toFixed(4),
-          timestamp: new Date()
-        };
-        
-        this.prices.set(priceId, bitcoinPrice);
-      }
-    }
-  }
-
-  private async updateMissingPricesFromCryptoCompare(): Promise<void> {
-    try {
-      const exchangesWithData = new Set(
-        Array.from(this.latestPricesByExchange.keys())
-      );
-      
-      const allExchanges = Array.from(this.exchanges.values());
-      const missingExchanges = allExchanges.filter(exchange => 
-        !exchangesWithData.has(exchange.id) && exchange.isActive
-      );
-      
-      if (missingExchanges.length === 0) {
-        return;
-      }
-      
-      console.log(`Fetching data for ${missingExchanges.length} additional exchanges from CryptoCompare...`);
-      const cryptoComparePrices = await cryptoCompareService.getMultiExchangePrices();
-      
-      for (const exchangePrice of cryptoComparePrices) {
-        const exchange = missingExchanges.find(e => e.name === exchangePrice.exchangeName);
-        
-        if (exchange) {
-          const priceId = this.currentId++;
-          const bitcoinPrice: BitcoinPrice = {
-            id: priceId,
-            exchangeId: exchange.id,
-            price: exchangePrice.price.toFixed(8),
-            volume24h: exchangePrice.volume24h.toFixed(2),
-            change24h: exchangePrice.change24h.toFixed(4),
-            spread: exchangePrice.spread.toFixed(4),
-            timestamp: exchangePrice.timestamp
-          };
-          
-          this.prices.set(priceId, bitcoinPrice);
-          this.latestPricesByExchange.set(exchange.id, bitcoinPrice);
-        }
-      }
-      
-      console.log(`Updated ${cryptoComparePrices.length} additional exchanges from CryptoCompare`);
-
-    } catch (error) {
-      console.error('Failed to update prices from CryptoCompare:', error);
-    }
-  }
-
-
 
   async getPriceComparison(): Promise<PriceComparison> {
     const exchanges = await this.getCurrentPrices();
@@ -786,37 +481,7 @@ export class MemStorage implements IStorage {
   }
 
   async getHistoricalPrices(timestamp: Date): Promise<HistoricalComparison> {
-    // For demo purposes, generate historical data
-    const exchanges = await this.getExchanges();
-    const currentPrices = await this.getCurrentPrices();
-    
-    const historicalData = exchanges.map(exchange => {
-      const currentPrice = currentPrices.find(p => p.exchange.id === exchange.id);
-      const historicalPrice = currentPrice ? parseFloat(currentPrice.currentPrice.price) * 0.635 : 42800; // Simulate ~37% growth
-      
-      const historical: HistoricalPrice = {
-        id: this.currentId++,
-        exchangeId: exchange.id,
-        price: historicalPrice.toFixed(8),
-        volume24h: (Math.random() * 3000000000).toFixed(2),
-        marketShare: (Math.random() * 50).toFixed(2),
-        timestamp
-      };
-
-      const vsNow = currentPrice ? 
-        ((parseFloat(currentPrice.currentPrice.price) - historicalPrice) / historicalPrice) * 100 : 0;
-
-      return {
-        exchange,
-        price: historical,
-        vsNow
-      };
-    });
-
-    return {
-      timestamp,
-      exchanges: historicalData
-    };
+    throw new Error('Verified historical exchange prices unavailable');
   }
 
   async getHistoricalPricesRange(startDate: Date, endDate: Date): Promise<HistoricalPrice[]> {
@@ -928,75 +593,11 @@ export class MemStorage implements IStorage {
   }
 
   async getMovingAverageData(): Promise<MovingAverageData> {
-    const prices = Array.from(this.latestPricesByExchange.values());
-    const currentPrice = prices.length > 0 ? parseFloat(prices[0].price) : 100000;
-    
-    return {
-      ma7: currentPrice * 0.98,
-      ma30: currentPrice * 0.95,
-      ma50: currentPrice * 0.92,
-      ma200: currentPrice * 0.88,
-      currentPrice,
-      trend: currentPrice > currentPrice * 0.95 ? 'bullish' : 'bearish',
-      strength: 'moderate',
-      prediction: {
-        shortTerm: 'up',
-        confidence: 75,
-        targetPrice: currentPrice * 1.05
-      }
-    };
+    throw new Error('Verified moving averages unavailable');
   }
 
   async getLiquidityDepth(exchangeId?: number): Promise<LiquidityDepthData[]> {
-    const exchanges = Array.from(this.exchanges.values());
-    const targetExchanges = exchangeId ? [this.exchanges.get(exchangeId)!] : exchanges.slice(0, 3);
-    
-    return targetExchanges.map(exchange => {
-      const price = this.latestPricesByExchange.get(exchange.id);
-      const midPrice = price ? parseFloat(price.price) : 100000;
-      
-      const generateOrderBook = (midPrice: number): { bids: OrderBookEntry[], asks: OrderBookEntry[] } => {
-        const bids: OrderBookEntry[] = [];
-        const asks: OrderBookEntry[] = [];
-        
-        for (let i = 0; i < 20; i++) {
-          const bidPrice = midPrice - (i + 1) * 50;
-          const askPrice = midPrice + (i + 1) * 50;
-          const amount = Math.random() * 10 + 1;
-          
-          bids.push({
-            price: bidPrice,
-            amount: amount,
-            total: amount * bidPrice
-          });
-          
-          asks.push({
-            price: askPrice,
-            amount: amount,
-            total: amount * askPrice
-          });
-        }
-        
-        return { bids, asks };
-      };
-      
-      const { bids, asks } = generateOrderBook(midPrice);
-      
-      return {
-        exchange,
-        bids,
-        asks,
-        spread: 0.1,
-        midPrice,
-        bidVolume: bids.reduce((sum, bid) => sum + bid.amount, 0),
-        askVolume: asks.reduce((sum, ask) => sum + ask.amount, 0),
-        depth: {
-          support: midPrice * 0.99,
-          resistance: midPrice * 1.01,
-          imbalance: 0.05
-        }
-      };
-    });
+    throw new Error('Verified liquidity data unavailable');
   }
 
   async getMarketData(): Promise<any> {

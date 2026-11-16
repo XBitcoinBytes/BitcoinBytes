@@ -68,7 +68,7 @@ export default function LivePrices() {
         setPreviousPrices(prev => new Map(prev).set(exchangeKey, currentPriceValue));
       });
     }
-  }, [priceComparison?.exchanges, previousPrices]);
+  }, [priceComparison?.exchanges]);
 
   if (isLoading) {
     return (
@@ -94,12 +94,12 @@ export default function LivePrices() {
     );
   }
 
-  if (!priceComparison) {
+  if (error || !priceComparison) {
     return (
       <section id="live-prices" className="py-8 bg-gradient-to-b from-dark-bg to-surface">
         <div className="container mx-auto px-6 text-center">
           <h3 className="text-4xl font-bold mb-6 text-red-400">
-            Price Data Unavailable
+            Price unavailable
           </h3>
           <p className="text-gray-300">
             Unable to fetch real-time Bitcoin prices. Please try again later.
@@ -145,7 +145,7 @@ export default function LivePrices() {
                       Real-time Bitcoin prices
                     </span>
                   </QuickExplainer>
-                  <span className="text-gray-200 mx-1 sm:mx-2">updated every second across</span>
+                  <span className="text-gray-200 mx-1 sm:mx-2">refreshed every 30 seconds across</span>
                   <QuickExplainer
                     title="Major Bitcoin Exchanges"
                     explanation="These are the world's largest Bitcoin trading platforms where millions of users buy and sell Bitcoin 24/7. Each exchange operates independently, creating slight price differences."
@@ -353,7 +353,7 @@ export default function LivePrices() {
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-bitcoin mb-2 animate-pulse-slow">
-                  {priceComparison.averageSpread.toFixed(2)}%
+                  {priceComparison.averageSpread?.toFixed(2) ?? "Unavailable"}%
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <div className="text-sm text-gray-300">Average Spread</div>

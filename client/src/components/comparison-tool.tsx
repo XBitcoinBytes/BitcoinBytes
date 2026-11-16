@@ -1,3 +1,4 @@
+import { usePriceClock } from '@/hooks/use-bitcoin-price';
 import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ExternalLink, RefreshCw, AlertTriangle, Clock, CheckCircle, Info, Trophy } from 'lucide-react';
@@ -209,16 +210,20 @@ async function fetchComparison(amount: number): Promise<ComparisonResponse> {
 }
 
 export function ComparisonTool() {
+  const now = usePriceClock();
   const [inputValue, setInputValue] = useState('100');
   const [submittedAmount, setSubmittedAmount] = useState(100);
 
   const { data, isFetching, error, refetch } = useQuery<ComparisonResponse, Error>({
     queryKey: ['compare', submittedAmount],
     queryFn: () => fetchComparison(submittedAmount),
-    staleTime: 30_000,
+    staleTime: 0,
+    refetchInterval: 30000,
     gcTime: 120_000,
     retry: 1,
   });
+
+  const expired = !!data?.ranked.some(result => now - result.fetchedAt > 45000);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -292,12 +297,12 @@ export function ComparisonTool() {
         </div>
       )}
 
-      {error && !isFetching && (
+      {(error || expired) && !isFetching && (
         <div className="rounded-xl border border-red-700/40 bg-red-900/10 p-5 text-sm text-red-400 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium mb-1">Comparison unavailable</p>
-            <p className="text-red-400/70">{error.message}</p>
+            <p className="font-medium mb-1">Price unavailable</p>
+            <p className="text-red-400/70">{error?.message || 'Quotes have expired. Refresh to fetch current prices.'}</p>
             <button
               onClick={() => refetch()}
               className="mt-2 text-xs text-red-400 underline hover:text-red-300"
@@ -308,7 +313,7 @@ export function ComparisonTool() {
         </div>
       )}
 
-      {data && !isFetching && (
+      {data && !error && !expired && !isFetching && (
         <div>
           {/* Header row */}
           <div className="flex items-center justify-between mb-4">

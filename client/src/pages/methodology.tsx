@@ -121,10 +121,9 @@ effective_rate = usd_amount / btc_received`}
 
         <Section id="staleness" title="Data freshness and staleness">
           <p>
-            Order-book data is cached for up to 90 seconds per provider to limit API load. After 90
-            seconds a cached result is labelled <strong className="text-yellow-400">stale</strong> but
-            remains in the ranking. After 6 minutes a stale result is demoted to the unranked section
-            with an explanation. Stale results are never used without disclosure.
+            Order-book data is cached for up to 45 seconds per provider to limit API load.
+            Expired quotes are excluded from ranking. If no current quotes are available,
+            the comparison shows “Price unavailable” and you can retry.
           </p>
           <p>
             A minimum of 3 fresh or stale (within the hard cutoff) ranked results must be present
