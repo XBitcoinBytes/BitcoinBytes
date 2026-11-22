@@ -114,11 +114,11 @@ function RankedCard({ result, rank, isWinner }: { result: RankedResult; rank: nu
           <a
             href={result.providerUrl}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="flex-shrink-0 flex items-center gap-1 text-xs text-[#f7931a] hover:text-[#f7931a] border border-[#f7931a]/30 hover:border-[#f7931a]/60 rounded-lg px-3 py-1.5 transition-colors"
-            aria-label={`Open ${result.providerName} to buy Bitcoin`}
+            aria-label={`Visit ${result.providerName} (opens in a new tab)`}
           >
-            Buy <ExternalLink className="w-3 h-3" />
+            Visit site <ExternalLink className="w-3 h-3" />
           </a>
         </div>
 
