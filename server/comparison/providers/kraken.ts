@@ -11,7 +11,7 @@
  */
 
 import type { ProviderAdapter, ProviderResult, RankedResult, UnrankedResult } from '../types.js';
-import { PROVIDER_TIMEOUT_MS, STALE_TTL_MS } from '../types.js';
+import { PROVIDER_TIMEOUT_MS, STALE_TTL_MS, ORDERBOOK_CACHE_MS } from '../types.js';
 import { walkOrderBook, applyTakerFee, parseKrakenBook } from '../orderbook.js';
 
 const ORDER_BOOK_URL = 'https://api.kraken.com/0/public/Depth?pair=XBTUSD&count=50';
@@ -30,7 +30,7 @@ async function fetchOrderBook(timeoutMs: number): Promise<{ raw: unknown; fetche
   const now = Date.now();
 
   // Return cache if still fresh
-  if (cache && now - cache.fetchedAt < STALE_TTL_MS) {
+  if (cache && now - cache.fetchedAt < ORDERBOOK_CACHE_MS) {
     return { raw: cache.raw, fetchedAt: cache.fetchedAt, fromCache: true };
   }
 
@@ -46,6 +46,12 @@ async function fetchOrderBook(timeoutMs: number): Promise<{ raw: unknown; fetche
     if ((raw as any).error?.length) throw new Error(`Kraken API error: ${JSON.stringify((raw as any).error)}`);
     cache = { raw, fetchedAt: Date.now() };
     return { raw, fetchedAt: cache.fetchedAt, fromCache: false };
+  } catch (err) {
+    // Upstream hiccup: serve the last good book while it is still inside the 45 s hard cutoff.
+    if (cache && Date.now() - cache.fetchedAt < STALE_TTL_MS) {
+      return { raw: cache.raw, fetchedAt: cache.fetchedAt, fromCache: true };
+    }
+    throw err;
   } finally {
     clearTimeout(timer);
   }

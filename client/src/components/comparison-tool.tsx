@@ -1,4 +1,4 @@
-import { friendlyError, amountFromSearch, syncAmountToUrl, parseUsd } from '@/lib/compareHelpers';
+import { friendlyError, amountFromSearch, syncAmountToUrl, parseUsd, nextRefreshMs, QUOTE_EXPIRY_MS } from '@/lib/compareHelpers';
 import { usePriceClock } from '@/hooks/use-bitcoin-price';
 import { useState, useCallback } from 'react';
 import { Link2 } from 'lucide-react';
@@ -223,12 +223,14 @@ export function ComparisonTool() {
     queryKey: ['compare', submittedAmount],
     queryFn: () => fetchComparison(submittedAmount),
     staleTime: 0,
-    refetchInterval: 30000,
+    // Refresh before the oldest quote passes the 45 s expiry (server caches books for up to 45 s,
+    // so a fixed 30 s timer let quotes expire and flashed "Price unavailable" between refreshes).
+    refetchInterval: (query) => nextRefreshMs(query.state.data?.ranked.map((r) => r.fetchedAt) ?? [], Date.now()),
     gcTime: 120_000,
     retry: 1,
   });
 
-  const expired = !!data?.ranked.some(result => now - result.fetchedAt > 45000);
+  const expired = !!data?.ranked.some(result => now - result.fetchedAt > QUOTE_EXPIRY_MS);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { friendlyError, amountFromSearch, parseUsd } from '../../client/src/lib/compareHelpers';
+import { friendlyError, amountFromSearch, parseUsd, nextRefreshMs } from '../../client/src/lib/compareHelpers';
 
 describe('comparison helpers', () => {
   it('never shows raw HTTP codes', () => {
@@ -31,5 +31,15 @@ describe('strict USD parsing (red-team P9)', () => {
     expect(parseUsd('12abc')).toBeNull();
     expect(parseUsd('-5')).toBeNull();
     expect(parseUsd('')).toBeNull();
+  });
+});
+
+describe('refresh timing', () => {
+  it('refreshes before the oldest quote expires', () => {
+    const now = 1_000_000;
+    expect(nextRefreshMs([], now)).toBe(30_000);
+    expect(nextRefreshMs([now], now)).toBe(30_000);            // fresh quote: normal 30 s
+    expect(nextRefreshMs([now - 30_000], now)).toBe(10_000);   // server-cached 30 s old: refresh at 40 s
+    expect(nextRefreshMs([now - 44_000], now)).toBe(3_000);    // nearly expired: soon, but not a hot loop
   });
 });

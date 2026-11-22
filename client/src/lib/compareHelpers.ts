@@ -32,3 +32,13 @@ export function syncAmountToUrl(n: number) {
   window.history.replaceState(null, '', url.pathname + url.search + url.hash);
 }
 
+
+/** Quotes older than this are hidden as expired (keep in sync with the 45 s check in the tool). */
+export const QUOTE_EXPIRY_MS = 45_000;
+
+/** Next refresh: at most 30 s, and always ~5 s before the oldest quote expires (min 3 s). */
+export function nextRefreshMs(fetchedAts: number[], now: number): number {
+  if (!fetchedAts.length) return 30_000;
+  const age = now - Math.min(...fetchedAts);
+  return Math.max(3_000, Math.min(30_000, QUOTE_EXPIRY_MS - 5_000 - age));
+}

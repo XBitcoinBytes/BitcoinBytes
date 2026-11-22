@@ -104,7 +104,9 @@ export interface ComparisonResponse {
 }
 
 export const MIN_RANKED_FOR_WINNER = 3;
-export const STALE_TTL_MS = 45_000;          // Cache public order books for at most 45 seconds
+export const STALE_TTL_MS = 45_000;          // Never rank a quote older than 45 seconds
+/** Re-read order books after 15 s, so a served quote always has most of its 45 s life left. */
+export const ORDERBOOK_CACHE_MS = 15_000;
 export const PROVIDER_TIMEOUT_MS = 8_000;    // 8 s per provider request
 export const ENGINE_VERSION = '1.0.0';
 

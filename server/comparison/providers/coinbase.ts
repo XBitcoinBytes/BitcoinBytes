@@ -15,7 +15,7 @@
  */
 
 import type { ProviderAdapter, ProviderResult, UnrankedResult } from '../types.js';
-import { PROVIDER_TIMEOUT_MS, STALE_TTL_MS } from '../types.js';
+import { PROVIDER_TIMEOUT_MS, STALE_TTL_MS, ORDERBOOK_CACHE_MS } from '../types.js';
 
 const PRICE_URL = 'https://api.coinbase.com/v2/prices/BTC-USD/buy';
 const PURCHASE_URL = 'https://www.coinbase.com/buy-bitcoin';
@@ -39,7 +39,7 @@ export const coinbaseAdapter: ProviderAdapter = {
     try {
       let indicativeAsk: number | undefined;
 
-      if (cache && now - cache.fetchedAt < STALE_TTL_MS) {
+      if (cache && now - cache.fetchedAt < ORDERBOOK_CACHE_MS) {
         indicativeAsk = cache.price;
       } else {
         const controller = new AbortController();
