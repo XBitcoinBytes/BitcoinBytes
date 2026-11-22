@@ -7,7 +7,6 @@ import { z } from "zod";
 import { coinGeckoService } from "./coingecko";
 import { newsletterService } from "./newsletter";
 import { responseCache } from "./responseCache";
-import { healthMonitor } from "./healthMonitor";
 import { cascadeApiManager } from "./cascadeApiManager";
 import { freeApiSources } from "./freeApiSources";
 import { redisCache, cacheManager } from "./redis";
@@ -539,102 +538,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/news/trending", async (req, res) => {
-    try {
-      const cacheKey = 'news:trending';
-      const cached = responseCache.get(cacheKey);
-      
-      if (cached) {
-        return res.json(cached);
-      }
-      
-      // For now, return static trending topics
-      const trending = [
-        { topic: "#InstitutionalAdoption", growth: 127 },
-        { topic: "#BitcoinETF", growth: 89 },
-        { topic: "#Mining", growth: 67 },
-        { topic: "#Regulation", growth: 45 },
-        { topic: "#DeFi", growth: 32 }
-      ];
-      
-      // Cache for 10 minutes
-      responseCache.set(cacheKey, trending, 600000);
-      
-      res.json(trending);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch trending topics" });
-    }
+  // Was hard-coded "trending topics" with made-up growth numbers. Removed (no invented stats).
+  app.get("/api/news/trending", (_req, res) => {
+    res.status(410).json({ message: "This feature is not available" });
   });
-
-  // Market analysis helper functions
-  async function analyzeMarketPatterns(prices: any[]): Promise<string> {
-    const priceChanges = prices.map(p => parseFloat(p.currentPrice.change24h || '0'));
-    const avgChange = priceChanges.reduce((sum, change) => sum + change, 0) / priceChanges.length;
-    const volatility = Math.sqrt(priceChanges.reduce((sum, change) => sum + Math.pow(change - avgChange, 2), 0) / priceChanges.length);
-    
-    if (avgChange > 2 && volatility < 0.5) return 'Bull Flag';
-    if (avgChange < -2 && volatility < 0.5) return 'Bear Flag';
-    if (volatility > 1.5) return 'Diamond Top';
-    if (avgChange > 0 && volatility < 1) return 'Ascending Triangle';
-    if (avgChange < 0 && volatility < 1) return 'Descending Triangle';
-    return 'Sideways Consolidation';
-  }
-
-  async function getPatternStatus(prices: any[]): Promise<string> {
-    const volumes = prices.map(p => parseFloat(p.currentPrice.volume24h || '0'));
-    const avgVolume = volumes.reduce((sum, vol) => sum + vol, 0) / volumes.length;
-    const recentVolume = volumes.slice(-3).reduce((sum, vol) => sum + vol, 0) / 3;
-    
-    if (recentVolume > avgVolume * 1.2) return 'Confirmed';
-    if (recentVolume > avgVolume * 0.8) return 'Forming';
-    return 'Detected';
-  }
-
-  async function calculatePatternSuccessRate(prices: any[]): Promise<number> {
-    const priceChanges = prices.map(p => parseFloat(p.currentPrice.change24h || '0'));
-    const positiveChanges = priceChanges.filter(change => change > 0).length;
-    const successRate = (positiveChanges / priceChanges.length) * 100;
-    return Math.round((successRate + Math.random() * 20 - 10) * 100) / 100;
-  }
-
-  async function assessMarketRisk(prices: any[]): Promise<string> {
-    const spreads = prices.map(p => parseFloat(p.currentPrice.spread || '0'));
-    const avgSpread = spreads.reduce((sum, spread) => sum + spread, 0) / spreads.length;
-    const priceChanges = prices.map(p => Math.abs(parseFloat(p.currentPrice.change24h || '0')));
-    const avgVolatility = priceChanges.reduce((sum, change) => sum + change, 0) / priceChanges.length;
-    
-    if (avgSpread > 0.3 || avgVolatility > 3) return 'High';
-    if (avgSpread > 0.15 || avgVolatility > 1.5) return 'Medium';
-    return 'Low';
-  }
-
-  async function calculateVolumeAnomaly(prices: any[]): Promise<number> {
-    const volumes = prices.map(p => parseFloat(p.currentPrice.volume24h || '0'));
-    const avgVolume = volumes.reduce((sum, vol) => sum + vol, 0) / volumes.length;
-    const maxVolume = Math.max(...volumes);
-    const volumeSpike = ((maxVolume - avgVolume) / avgVolume) * 100;
-    return Math.round(Math.max(0, Math.min(100, volumeSpike)) * 100) / 100;
-  }
-
-  async function generateRiskDescription(prices: any[]): Promise<string> {
-    const risk = await assessMarketRisk(prices);
-    const spike = await calculateVolumeAnomaly(prices);
-    const priceChanges = prices.map(p => parseFloat(p.currentPrice.change24h || '0'));
-    const avgChange = priceChanges.reduce((sum, change) => sum + change, 0) / priceChanges.length;
-    
-    if (risk === 'High') {
-      if (avgChange > 2) return `High volatility with ${spike.toFixed(1)}% volume spike - bullish momentum detected`;
-      if (avgChange < -2) return `High volatility with ${spike.toFixed(1)}% volume spike - bearish pressure detected`;
-      return `High volatility detected with ${spike.toFixed(1)}% volume anomaly - monitor closely`;
-    }
-    if (risk === 'Medium') {
-      return `Moderate market volatility with ${spike.toFixed(1)}% volume variance - normal trading patterns`;
-    }
-    return `Low volatility environment with ${spike.toFixed(1)}% volume variance - stable conditions`;
-  }
-
-  // AI Intelligence endpoint
-
 
   app.get("/api/youtube/recent-videos", async (req, res) => {
     try {
@@ -654,32 +561,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(410).json({ message: "This feature is not available" });
   });
 
-  // Health monitoring endpoints
-  app.get("/api/health", (req, res) => {
-    try {
-      const systemHealth = healthMonitor.getSystemHealth();
-      res.json(systemHealth);
-    } catch (error) {
-      console.error("Health check error:", error);
-      res.status(500).json({ message: "Health check failed" });
-    }
-  });
-
-  // Individual service health endpoint
-  app.get("/api/health/:service", (req, res) => {
-    try {
-      const serviceName = req.params.service;
-      const serviceHealth = healthMonitor.getServiceStatus(serviceName);
-      
-      if (!serviceHealth) {
-        return res.status(404).json({ message: "Service not found" });
-      }
-      
-      res.json(serviceHealth);
-    } catch (error) {
-      console.error("Service health check error:", error);
-      res.status(500).json({ message: "Service health check failed" });
-    }
+  // Health: only facts this process actually knows. (The old monitor reported third-party APIs
+  // as "healthy" with 100% success without ever checking them.)
+  app.get("/api/health", async (_req, res) => {
+    const news = liveNewsService.getCacheStatus();
+    res.setHeader("Cache-Control", "no-store");
+    res.json({
+      status: "ok",
+      uptimeSeconds: Math.round(process.uptime()),
+      news: { articles: news.articleCount, lastSuccess: news.lastSuccess ? new Date(news.lastSuccess).toISOString() : null, failedSources: news.failedSources },
+    });
   });
 
   const httpServer = createServer(app);

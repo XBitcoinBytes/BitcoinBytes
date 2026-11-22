@@ -53,3 +53,13 @@ describe('concept → episode links', () => {
     for (const c of linked) expect(ids.has(c.relatedEpisode!.videoId)).toBe(true);
   });
 });
+
+describe('no invented stats in server code (red-team P9)', () => {
+  it('routes no longer ship hard-coded trending growth or fake health', () => {
+    const src = fs.readFileSync(path.join(__dirname, '../routes.ts'), 'utf8');
+    expect(src).not.toMatch(/growth:\s*\d+/);
+    expect(src).not.toMatch(/healthMonitor\./);
+    const yt = fs.readFileSync(path.join(__dirname, '../youtubeService.ts'), 'utf8');
+    expect(yt).not.toMatch(/viewCount|unsplash/i);
+  });
+});
