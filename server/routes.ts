@@ -68,7 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(apiSecurity.validateRequestSize);
   app.use(apiSecurity.blockSuspiciousRequests);
   if (process.env.NODE_ENV === 'production') {
-    app.use(apiSecurity.validateOrigin);
+    app.use('/api', apiSecurity.validateOrigin);
   }
   
   bitcoinLogger.system.startup(5000, process.env.NODE_ENV || 'development');

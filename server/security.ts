@@ -190,17 +190,29 @@ export const apiSecurity = {
     }
 
     const origin = req.get('Origin');
-    const allowedOrigins = [
-      'http://localhost:5000',
-      'https://bitcoinbytes.org',
-      process.env.ALLOWED_ORIGIN
-    ].filter(Boolean);
+    if (!origin) return next();
 
-    // Allow same-origin requests and configured origins
-    if (!origin || allowedOrigins.some(allowed => origin.includes(allowed || ''))) {
+    // Exact-match allowlist (substring matching allowed look-alike hosts such as
+    // bitcoinbytes.org.evil.example). Same-host requests are always allowed so the
+    // app works on any deploy URL (e.g. a Railway preview domain).
+    const allowedOrigins = new Set([
+      'https://bitcoinbytes.org',
+      'https://www.bitcoinbytes.org',
+      'http://localhost:5000',
+      ...(process.env.ALLOWED_ORIGIN || '').split(',').map(o => o.trim()).filter(Boolean),
+    ]);
+
+    let sameHost = false;
+    try {
+      sameHost = new URL(origin).host === req.get('host');
+    } catch {
+      sameHost = false;
+    }
+
+    if (sameHost || allowedOrigins.has(origin)) {
       next();
     } else {
-      res.status(403).json({ 
+      res.status(403).json({
         error: 'Origin not allowed',
         code: 'INVALID_ORIGIN'
       });
