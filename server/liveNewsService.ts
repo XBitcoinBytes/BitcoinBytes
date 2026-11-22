@@ -39,6 +39,23 @@ export const FEEDS: Feed[] = [
 /** Headlines are dropped if they use copy BitcoinBytes must never display. */
 const BANNED_COPY = /on sale|buy the dip|price target|price prediction/i;
 const BITCOIN_RE = /\bbitcoin\b|\bbtc\b/i;
+/**
+ * Third-party headlines that read as price predictions or trading signals. BitcoinBytes never
+ * shows targets or buy/sell signals, so these are skipped even though they are real news.
+ * Plain reporting ("Bitcoin falls below $60K") is kept.
+ */
+export const PREDICTION_COPY = new RegExp([
+  String.raw`\b(could|will|may|set to|poised to|eyes?|targets?)\s+(hit|reach|top|test|retest|surge|soar|climb|rally|crash|plunge)\b`,
+  String.raw`\$\s?[\d,.]+\s?[kmb]?\s+(by|in)\s+20\d\d`,
+  String.raw`\$\s?[\d,.]+\s?[kmb]?\s+next\b`,
+  String.raw`\bprice (prediction|target|forecast)s?\b`,
+  String.raw`\bchart pattern\b`,
+  String.raw`\b(death|golden) cross\b`,
+  String.raw`\b(bullish|bearish)\b`,
+  String.raw`\bbottom(ed)? (is )?in\b`,
+  String.raw`\b(buy|sell)(ing)? signal\b`,
+  String.raw`\bover(sold|bought)\b`,
+].join('|'), 'i');
 const CACHE_MS = 15 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 8000;
 const MAX_ITEMS = 50;
@@ -85,8 +102,10 @@ export function parseFeed(xml: string, feed: Feed): LiveNewsArticle[] {
     const url = safeArticleUrl(tag(item, 'link'), feed.hosts);
     const date = new Date(decodeText(tag(item, 'pubDate')));
     if (!title || !url || Number.isNaN(date.getTime())) continue;
-    if (feed.filterBitcoin && !BITCOIN_RE.test(`${title} ${summary}`)) continue;
+    // General-crypto feeds: the headline itself must be about Bitcoin (not just the summary).
+    if (feed.filterBitcoin && !BITCOIN_RE.test(title)) continue;
     if (BANNED_COPY.test(`${title} ${summary}`)) continue;
+    if (PREDICTION_COPY.test(title)) continue;
     out.push({
       title, summary, content: summary, url, source: feed.source,
       author: decodeText(tag(item, 'dc:creator')).slice(0, 120) || feed.source,

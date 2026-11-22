@@ -56,7 +56,7 @@ export default function Learn() {
 
         <section aria-labelledby="news-heading" className="mb-14">
           <h2 id="news-heading" className="text-xl font-bold text-white mb-1">Latest Bitcoin headlines</h2>
-          <p className="text-white/60 text-sm mb-4">From the publishers’ public feeds, linking to the original articles. Headlines are not endorsements.</p>
+          <p className="text-white/60 text-sm mb-4">From the publishers’ public feeds, linking to the original articles. We skip headlines built around price predictions or chart signals. Headlines are not endorsements.</p>
           <NewsHeadlines />
         </section>
 
