@@ -38,9 +38,21 @@ export function serveStatic(app: Express) {
     res.status(404).json({ message: "Not found" });
   });
 
-  // SPA fallback for client-side routes.
-  app.use("*", (_req, res) => {
+  // SPA fallback. Unknown paths still get the app (it renders the branded 404 page) but with a
+  // real 404 status so search engines don't index soft 404s.
+  app.use("*", (req, res) => {
     res.setHeader("Cache-Control", "no-cache");
+    res.status(isClientRoute(req.originalUrl) ? 200 : 404);
     res.sendFile(path.resolve(distPath, "index.html"));
   });
+}
+
+/** Paths the client router serves (keep in sync with client/src/App.tsx). */
+export const CLIENT_ROUTES = new Set([
+  "/", "/methodology", "/fees", "/beginners", "/learn", "/legal", "/data-status", "/prices",
+]);
+
+export function isClientRoute(url: string): boolean {
+  const pathname = (url.split(/[?#]/)[0] || "/").replace(/\/+$/, "") || "/";
+  return CLIENT_ROUTES.has(pathname.toLowerCase());
 }
