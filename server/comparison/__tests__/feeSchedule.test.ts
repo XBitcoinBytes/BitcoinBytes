@@ -21,6 +21,7 @@ const unranked = (id: string) => ({ providerId: id, getQuote: async () => ({
 vi.mock('../providers/kraken.js', () => ({ krakenAdapter: { providerId: 'kraken', getQuote: async () => ranked('kraken', 0.00167922) } }));
 vi.mock('../providers/binanceus.js', () => ({ binanceUsAdapter: { providerId: 'binanceus', getQuote: async () => ranked('binanceus', 0.00169184) } }));
 vi.mock('../providers/cryptodotcom.js', () => ({ cryptoDotComAdapter: { providerId: 'cryptodotcom', getQuote: async () => ranked('cryptodotcom', 0.00168403) } }));
+vi.mock('../providers/coinbaseadvanced.js', () => ({ coinbaseAdvancedAdapter: { providerId: 'coinbaseadvanced', getQuote: async () => ranked('coinbaseadvanced', 0.00167100) } }));
 vi.mock('../providers/coinbase.js', () => ({ coinbaseAdapter: unranked('coinbase') }));
 vi.mock('../providers/strike.js', () => ({ strikeAdapter: unranked('strike') }));
 vi.mock('../providers/river.js', () => ({ riverAdapter: unranked('river') }));
@@ -38,6 +39,7 @@ describe('published fee schedule', () => {
     expect(PUBLISHED_FEES.binanceus.takerRate).toBe(0.0002);   // binance.us/fees
     expect(PUBLISHED_FEES.kraken.takerRate).toBe(0.008);       // kraken.com/pro/fees Tier 1
     expect(PUBLISHED_FEES.cryptodotcom.takerRate).toBe(0.005); // Exchange US Level 1
+    expect(PUBLISHED_FEES.coinbaseadvanced.takerRate).toBe(0.009); // Coinbase Advanced US entry tier
   });
 
   it('every fee has an https official source URL and a citation with the checked date', () => {
@@ -71,6 +73,7 @@ describe('engine fee-staleness guard', () => {
     expect(r.feesCheckedOn).toBe(FEES_CHECKED_ON);
     expect(r.hasWinner).toBe(true);
     expect(r.ranked[0].providerId).toBe('binanceus');
+    expect(r.ranked.map((x) => x.providerId)).toEqual(['binanceus', 'cryptodotcom', 'kraken', 'coinbaseadvanced']);
   });
 
   it('withholds the winner badge once fees are older than the threshold', async () => {
@@ -79,6 +82,15 @@ describe('engine fee-staleness guard', () => {
     const r = await runComparison(100);
     expect(r.feesStale).toBe(true);
     expect(r.hasWinner).toBe(false);
-    expect(r.ranked.length).toBe(3); // results still shown for reference
+    expect(r.ranked.length).toBe(4); // results still shown for reference
+  });
+});
+
+describe('Strike fee note', () => {
+  it('no longer claims 0% fees on standard purchases and cites the official page', async () => {
+    const { STRIKE_FEE_NOTE } = await import('../../../shared/feeSchedule.js');
+    expect(STRIKE_FEE_NOTE.summary).not.toMatch(/0% fee/i);
+    expect(STRIKE_FEE_NOTE.summary).toContain('0.89%');
+    expect(STRIKE_FEE_NOTE.sourceUrl).toBe('https://strike.me/support/what-are-the-trading-fees/');
   });
 });

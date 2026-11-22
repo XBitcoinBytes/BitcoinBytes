@@ -29,7 +29,7 @@ let cache: CacheEntry | null = null;
 
 export const coinbaseAdapter: ProviderAdapter = {
   id: 'coinbase',
-  name: 'Coinbase',
+  name: 'Coinbase (simple buy)',
   purchaseUrl: PURCHASE_URL,
 
   async getQuote(usdAmount: number, timeoutMs = PROVIDER_TIMEOUT_MS): Promise<ProviderResult> {
@@ -64,12 +64,13 @@ export const coinbaseAdapter: ProviderAdapter = {
 
       const unranked: UnrankedResult = {
         providerId: 'coinbase',
-        providerName: 'Coinbase',
+        providerName: 'Coinbase (simple buy)',
         providerUrl: PURCHASE_URL,
         state: 'incomplete',
         reason:
           'Coinbase retail fees vary by payment method, location, and order size. ' +
-          'A guaranteed quote requires account authentication. Cannot rank without verified fee.',
+          'A guaranteed quote requires account authentication. Cannot rank without verified fee. ' +
+          'Coinbase Advanced (order book + published taker fee) is ranked separately.',
         partialData: {
           indicativeAsk,
           publishedFeeNote:
@@ -83,7 +84,7 @@ export const coinbaseAdapter: ProviderAdapter = {
       const message = err instanceof Error ? err.message : String(err);
       const unranked: UnrankedResult = {
         providerId: 'coinbase',
-        providerName: 'Coinbase',
+        providerName: 'Coinbase (simple buy)',
         providerUrl: PURCHASE_URL,
         state: 'unavailable',
         reason: `Coinbase indicative price unavailable: ${message}`,

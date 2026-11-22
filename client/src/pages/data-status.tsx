@@ -159,11 +159,11 @@ export default function DataStatus() {
           <div className="space-y-4 text-sm text-white/55 leading-relaxed">
             <p>
               <strong className="text-white">Ranked providers</strong> (Kraken, Crypto.com Exchange,
-              Binance.US) supply live order-book data via their public REST APIs. Order books are
+              Binance.US, Coinbase Advanced) supply live order-book data via their public REST APIs. Order books are
               cached for up to 90 seconds per provider to limit API load.
             </p>
             <p>
-              <strong className="text-white">Unranked providers</strong> (Coinbase, Strike, River,
+              <strong className="text-white">Unranked providers</strong> (Coinbase simple buy, Strike, River,
               Cash App, Robinhood, Swan) do not expose a public, unauthenticated endpoint that
               returns both an amount-specific price and a verifiable fee. Their status will remain
               "incomplete" unless they publish such an API.

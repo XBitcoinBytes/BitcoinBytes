@@ -23,7 +23,8 @@ const ORDER_BOOK_URL = 'https://api.binance.us/api/v3/depth?symbol=BTCUSD&limit=
 const TAKER_FEE_RATE = PUBLISHED_FEES.binanceus.takerRate; // see shared/feeSchedule.ts
 const FEE_RATE_SOURCE = feeSourceCitation(PUBLISHED_FEES.binanceus);
 const ORDER_BOOK_SOURCE = 'Binance.US public REST API v3 /depth endpoint';
-const PURCHASE_URL = 'https://www.binance.us/buy-sell-crypto';
+// Order-book trading page for the market we price (not the instant-buy flow, which is priced differently)
+const PURCHASE_URL = 'https://www.binance.us/spot-trade/btc_usd';
 
 interface CacheEntry {
   raw: unknown;

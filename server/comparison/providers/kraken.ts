@@ -17,7 +17,8 @@ const ORDER_BOOK_URL = 'https://api.kraken.com/0/public/Depth?pair=XBTUSD&count=
 const TAKER_FEE_RATE = PUBLISHED_FEES.kraken.takerRate; // see shared/feeSchedule.ts
 const FEE_RATE_SOURCE = feeSourceCitation(PUBLISHED_FEES.kraken);
 const ORDER_BOOK_SOURCE = 'Kraken public REST API v0 /Depth endpoint';
-const PURCHASE_URL = 'https://www.kraken.com/buy-crypto';
+// Order-book trading page for the market we price (not the instant-buy flow, which is priced differently)
+const PURCHASE_URL = 'https://pro.kraken.com/app/trade/btc-usd';
 
 interface CacheEntry {
   raw: unknown;

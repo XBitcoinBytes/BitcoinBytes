@@ -1,9 +1,9 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { PUBLISHED_FEES, formatCheckedOn, formatFeePercent } from '@shared/feeSchedule';
+import { PUBLISHED_FEES, STRIKE_FEE_NOTE, formatCheckedOn, formatFeePercent } from '@shared/feeSchedule';
 
-const FEE_ROWS = [PUBLISHED_FEES.binanceus, PUBLISHED_FEES.cryptodotcom, PUBLISHED_FEES.kraken];
+const FEE_ROWS = Object.values(PUBLISHED_FEES).sort((a, b) => a.takerRate - b.takerRate);
 const EXAMPLE_FEE = PUBLISHED_FEES.kraken;
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
@@ -152,8 +152,16 @@ export default function Fees() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 text-white/50">
-                <tr><td className="px-4 py-3 text-white/70">Coinbase</td><td className="px-4 py-3">Variable — depends on payment method, order size, location. Check at checkout.</td></tr>
-                <tr><td className="px-4 py-3 text-white/70">Strike</td><td className="px-4 py-3">Advertises 0% for standard purchases. Verify at strike.me.</td></tr>
+                <tr><td className="px-4 py-3 text-white/70">Coinbase (simple buy)</td><td className="px-4 py-3">Variable — depends on payment method, order size, location. Check at checkout. (Coinbase Advanced is ranked above.)</td></tr>
+                <tr>
+                  <td className="px-4 py-3 text-white/70">Strike</td>
+                  <td className="px-4 py-3" data-testid="strike-fee-note">
+                    {STRIKE_FEE_NOTE.summary} Checked {formatCheckedOn()} on{' '}
+                    <a href={STRIKE_FEE_NOTE.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#f7931a]">
+                      {STRIKE_FEE_NOTE.sourceLabel}
+                    </a>.
+                  </td>
+                </tr>
                 <tr><td className="px-4 py-3 text-white/70">River</td><td className="px-4 py-3">~1.3% for instant purchases. Verify at river.com.</td></tr>
                 <tr><td className="px-4 py-3 text-white/70">Cash App</td><td className="px-4 py-3">Service fee + spread. Shown only at point of sale.</td></tr>
                 <tr><td className="px-4 py-3 text-white/70">Robinhood</td><td className="px-4 py-3">No explicit fee; revenue through embedded spread. Amount undisclosed.</td></tr>

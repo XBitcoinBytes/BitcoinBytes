@@ -2,7 +2,7 @@
  * Strike Informational Provider
  *
  * Strike has NO public unauthenticated API. api.strike.me requires OAuth 2.0
- * for all resources. Strike's 0% fee claim is marketing copy, not an API response.
+ * for all resources. Published fee note comes from shared/feeSchedule.ts (STRIKE_FEE_NOTE).
  * Strike is not available in all US states (NY excluded as of last review).
  *
  * This adapter is permanently UNRANKED. It exists to show Strike in the UI
@@ -11,8 +11,9 @@
  */
 
 import type { ProviderAdapter, ProviderResult, UnrankedResult } from '../types.js';
+import { STRIKE_FEE_NOTE, formatCheckedOn } from '../../../shared/feeSchedule.js';
 
-const PURCHASE_URL = 'https://strike.me/buy-bitcoin/';
+const PURCHASE_URL = 'https://strike.me/buy/';
 
 export const strikeAdapter: ProviderAdapter = {
   id: 'strike',
@@ -26,12 +27,11 @@ export const strikeAdapter: ProviderAdapter = {
       providerUrl: PURCHASE_URL,
       state: 'incomplete',
       reason:
-        'Strike has no public API for purchase quotes. A verified fee and amount-specific price ' +
-        'cannot be obtained without authentication. Strike advertises 0% fees for standard ' +
-        'purchases but this cannot be confirmed programmatically.',
+        'Strike has no public API for purchase quotes, so an amount-specific price and fee cannot be ' +
+        'verified without an account. Its published fees are shown for reference only.',
       partialData: {
-        publishedFeeNote: 'Strike advertises 0% fee for standard BTC purchases via bank/Lightning (subject to change). Not available in all US states.',
-        feeUrl: 'https://strike.me/faq/',
+        publishedFeeNote: `${STRIKE_FEE_NOTE.summary} Checked ${formatCheckedOn()}.`,
+        feeUrl: STRIKE_FEE_NOTE.sourceUrl,
       },
       fetchedAt: Date.now(),
     };

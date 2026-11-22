@@ -160,3 +160,18 @@ export function parseCryptoDotComBook(raw: unknown): OrderBookLevel[] {
     }))
     .filter((l) => Number.isFinite(l.price) && Number.isFinite(l.quantity) && l.price > 0 && l.quantity > 0);
 }
+
+/** Parse a raw Coinbase Advanced Trade public product_book response */
+export function parseCoinbaseAdvancedBook(raw: unknown): OrderBookLevel[] {
+  // Coinbase Advanced: { pricebook: { product_id, bids: [{price,size}], asks: [{price,size}], time } }
+  const asks: unknown = (raw as any)?.pricebook?.asks;
+  if (!Array.isArray(asks)) throw new Error('Coinbase Advanced: missing asks array');
+
+  return asks
+    .map((row: any) => ({
+      price: parseFloat(String(row?.price)),
+      quantity: parseFloat(String(row?.size)),
+    }))
+    .filter((l) => Number.isFinite(l.price) && Number.isFinite(l.quantity) && l.price > 0 && l.quantity > 0)
+    .sort((a, b) => a.price - b.price); // lowest ask first, as walkOrderBook expects
+}

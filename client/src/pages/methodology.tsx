@@ -95,7 +95,7 @@ effective_rate = usd_amount / btc_received`}
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {[PUBLISHED_FEES.binanceus, PUBLISHED_FEES.cryptodotcom, PUBLISHED_FEES.kraken].map((f) => (
+                {Object.values(PUBLISHED_FEES).sort((a, b) => a.takerRate - b.takerRate).map((f) => (
                   <tr key={f.providerId}>
                     <td className="px-3 py-2 text-white/80">{f.providerName}<div className="text-white/50 mt-0.5">{f.tier}</div></td>
                     <td className="px-3 py-2 text-right font-mono text-[#f7931a]">{formatFeePercent(f.takerRate)}</td>
@@ -111,7 +111,7 @@ effective_rate = usd_amount / btc_received`}
           <ul className="list-disc list-inside space-y-2 ml-2">
             <li><strong className="text-white">User:</strong> Standard US retail customer with a verified account.</li>
             <li><strong className="text-white">Funding:</strong> USD already deposited via the platform's free or default funding method. ACH/bank transfer fees are excluded.</li>
-            <li><strong className="text-white">Order type:</strong> Immediate market buy at current prices.</li>
+            <li><strong className="text-white">Order type:</strong> Immediate market buy at current prices on each exchange's order-book trading screen (Kraken Pro, Binance.US spot trading, Crypto.com Exchange, Coinbase Advanced). "Visit site" opens that screen. Instant-buy flows are priced differently and are not what we estimate.</li>
             <li><strong className="text-white">Excluded:</strong> Withdrawal fees, Bitcoin network (miner) fees, payment-method surcharges, account verification fees.</li>
             <li><strong className="text-white">Fee tier:</strong> Entry-tier taker fee (no volume discounts, no loyalty-token discounts).</li>
             <li><strong className="text-white">Geographic:</strong> US market. Some providers have state-level restrictions.</li>

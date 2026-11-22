@@ -30,6 +30,7 @@ import { FEES_CHECKED_ON, feesAreStale } from '../../shared/feeSchedule.js';
 import { krakenAdapter } from './providers/kraken.js';
 import { binanceUsAdapter } from './providers/binanceus.js';
 import { cryptoDotComAdapter } from './providers/cryptodotcom.js';
+import { coinbaseAdvancedAdapter } from './providers/coinbaseadvanced.js';
 import { coinbaseAdapter } from './providers/coinbase.js';
 import { strikeAdapter } from './providers/strike.js';
 import { riverAdapter } from './providers/river.js';
@@ -45,6 +46,7 @@ const ADAPTERS: ProviderAdapter[] = [
   krakenAdapter,
   cryptoDotComAdapter,
   binanceUsAdapter,
+  coinbaseAdvancedAdapter,
   coinbaseAdapter,
   strikeAdapter,
   riverAdapter,

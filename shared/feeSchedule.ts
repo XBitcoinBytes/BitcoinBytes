@@ -10,7 +10,7 @@ export const FEES_CHECKED_ON = '2026-11-22';
 export const FEE_STALE_AFTER_DAYS = 30;
 
 export interface PublishedFee {
-  providerId: 'kraken' | 'binanceus' | 'cryptodotcom';
+  providerId: 'kraken' | 'binanceus' | 'cryptodotcom' | 'coinbaseadvanced';
   providerName: string;
   /** Decimal taker rate, e.g. 0.008 = 0.80% */
   takerRate: number;
@@ -46,6 +46,27 @@ export const PUBLISHED_FEES: Record<PublishedFee['providerId'], PublishedFee> = 
     sourceUrl: 'https://crypto.com/exchange-pro/en-US/document/fees-limits',
     sourceLabel: 'crypto.com Exchange US fees & limits',
   },
+  coinbaseadvanced: {
+    providerId: 'coinbaseadvanced',
+    providerName: 'Coinbase Advanced',
+    takerRate: 0.009,
+    // Coinbase's full fee table sits behind sign-in; this is its public announcement of the
+    // US spot entry tier (effective Sep 16, 2026): "US: 0.50% maker & 0.90% taker".
+    tier: 'US spot entry tier ($0+ 30-day volume), effective Sep 16, 2026',
+    sourceUrl: 'https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced',
+    sourceLabel: 'coinbase.com fee announcement',
+  },
+};
+
+/** Published fee notes for providers we cannot rank (no public quote API). Same checked date. */
+export const STRIKE_FEE_NOTE = {
+  oneTimeTakerRate: 0.0089, // one-time and target orders, monthly level <= $4,999.99
+  targetSpread: 0.0021, // "Strike targets an all-in spread of 0.21%"
+  summary:
+    'One-time and target buys: 0.89% fee at the starting monthly level (under $5,000), lower at higher volume, ' +
+    'plus a spread Strike targets at 0.21%. Recurring buys are fee-free for personal accounts after the first week.',
+  sourceUrl: 'https://strike.me/support/what-are-the-trading-fees/',
+  sourceLabel: 'strike.me trading fees',
 };
 
 /** "0.80%" style label without trailing noise (0.02%, 0.50%, 0.80%). */

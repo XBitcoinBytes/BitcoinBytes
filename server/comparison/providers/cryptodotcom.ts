@@ -2,6 +2,9 @@
  * Crypto.com Exchange Provider Adapter
  *
  * Order book: https://api.crypto.com/exchange/v1/public/get-book?instrument_name=BTC_USD&depth=50
+ * US check (2026-11-22): Crypto.com documents a single production public API
+ *   (api.crypto.com/exchange/v1). Its US trading page (crypto.com/exchange-pro/en-US/trade/BTC_USD)
+ *   showed the same BTC/USD 24h high and volume as this API, so it is the same market.
  * Taker fee + source: shared/feeSchedule.ts (PUBLISHED_FEES.cryptodotcom, dated FEES_CHECKED_ON)
  *
  * IMPORTANT LABEL: This reflects Crypto.com *Exchange* pricing, NOT the
@@ -24,7 +27,8 @@ const TAKER_FEE_RATE = PUBLISHED_FEES.cryptodotcom.takerRate; // see shared/feeS
 const FEE_RATE_SOURCE =
   feeSourceCitation(PUBLISHED_FEES.cryptodotcom);
 const ORDER_BOOK_SOURCE = 'Crypto.com Exchange public REST API v1 /get-book endpoint';
-const PURCHASE_URL = 'https://crypto.com/exchange/trade/spot/BTC_USD';
+// Order-book trading page for the market we price (not the instant-buy flow, which is priced differently)
+const PURCHASE_URL = 'https://crypto.com/exchange-pro/en-US/trade/BTC_USD';
 
 interface CacheEntry {
   raw: unknown;
