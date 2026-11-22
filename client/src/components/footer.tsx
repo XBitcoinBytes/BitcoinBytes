@@ -15,6 +15,7 @@ const COLUMNS = [
       { label: 'Methodology', href: '/methodology' },
       { label: 'Spreads & fees', href: '/fees' },
       { label: 'New to Bitcoin?', href: '/beginners' },
+      { label: 'Learn Bitcoin', href: '/learn' },
     ],
   },
   {

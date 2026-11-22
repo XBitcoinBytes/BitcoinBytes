@@ -14,6 +14,7 @@ import NotFound from '@/pages/not-found';
 const Methodology = lazy(() => import('@/pages/methodology'));
 const Fees = lazy(() => import('@/pages/fees'));
 const Beginners = lazy(() => import('@/pages/beginners'));
+const Learn = lazy(() => import('@/pages/learn'));
 const Legal = lazy(() => import('@/pages/legal'));
 const DataStatus = lazy(() => import('@/pages/data-status'));
 
@@ -86,6 +87,14 @@ function AppRoutes() {
         <ErrorBoundary fallback={makeRouteFallback('beginners')}>
           <Suspense fallback={<PageSkeleton />}>
             <Beginners />
+          </Suspense>
+        </ErrorBoundary>
+      </Route>
+
+      <Route path="/learn">
+        <ErrorBoundary fallback={makeRouteFallback('learn')}>
+          <Suspense fallback={<PageSkeleton />}>
+            <Learn />
           </Suspense>
         </ErrorBoundary>
       </Route>

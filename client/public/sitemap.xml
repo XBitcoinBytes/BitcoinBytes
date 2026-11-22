@@ -2,32 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://bitcoinbytes.org/</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://bitcoinbytes.org/prices</loc>
-    <lastmod>2025-06-11</lastmod>
-    <changefreq>hourly</changefreq>
+    <loc>https://bitcoinbytes.org/learn</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://bitcoinbytes.org/charts</loc>
-    <lastmod>2025-06-11</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://bitcoinbytes.org/beginners</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bitcoinbytes.org/news</loc>
-    <lastmod>2025-06-11</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://bitcoinbytes.org/analytics</loc>
-    <lastmod>2025-06-11</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://bitcoinbytes.org/methodology</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bitcoinbytes.org/fees</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bitcoinbytes.org/data-status</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://bitcoinbytes.org/legal</loc>
+    <lastmod>2026-11-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

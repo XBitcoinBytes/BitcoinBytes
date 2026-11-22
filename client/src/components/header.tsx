@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: '/methodology', label: 'Methodology' },
   { href: '/fees', label: 'Fees Guide' },
   { href: '/beginners', label: 'New to Bitcoin?' },
+  { href: '/learn', label: 'Learn' },
   { href: '/data-status', label: 'Data Status' },
 ];
 

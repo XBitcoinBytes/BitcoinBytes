@@ -1,10 +1,10 @@
 {
-  "name": "Bitcoin Bytes - Bitcoin Intelligence Platform",
-  "short_name": "Bitcoin Bytes",
-  "description": "Comprehensive Bitcoin price tracking, AI-powered market intelligence, and educational platform for understanding Bitcoin as sound money.",
+  "name": "BitcoinBytes - Compare Bitcoin purchase costs",
+  "short_name": "BitcoinBytes",
+  "description": "Compare what you actually receive when buying Bitcoin across US exchanges, using live order books and published fees, plus plain-language Bitcoin education.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f1419",
+  "background_color": "#0a0a12",
   "theme_color": "#f7931a",
   "orientation": "portrait-primary",
   "icons": [
@@ -21,7 +21,11 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["finance", "business", "education"],
+  "categories": [
+    "finance",
+    "business",
+    "education"
+  ],
   "lang": "en",
   "dir": "ltr",
   "scope": "/",
@@ -29,40 +33,22 @@
   "prefer_related_applications": false,
   "shortcuts": [
     {
-      "name": "Live Bitcoin Prices",
-      "short_name": "Prices",
-      "description": "View real-time Bitcoin prices across exchanges",
-      "url": "/#live-prices",
-      "icons": [
-        {
-          "src": "generated-icon.png",
-          "sizes": "192x192"
-        }
-      ]
+      "name": "Compare prices",
+      "short_name": "Compare",
+      "description": "Compare estimated Bitcoin purchase costs",
+      "url": "/"
     },
     {
-      "name": "AI Market Intelligence",
-      "short_name": "AI Insights",
-      "description": "Access AI-powered market analysis and trading signals",
-      "url": "/#ai-intelligence",
-      "icons": [
-        {
-          "src": "generated-icon.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Bitcoin Education",
+      "name": "Learn Bitcoin",
       "short_name": "Learn",
-      "description": "Learn about Bitcoin as sound money",
-      "url": "/#bitcoin-education",
-      "icons": [
-        {
-          "src": "generated-icon.png",
-          "sizes": "192x192"
-        }
-      ]
+      "description": "Plain-language Bitcoin education",
+      "url": "/learn"
+    },
+    {
+      "name": "Data status",
+      "short_name": "Status",
+      "description": "Live status of each data source",
+      "url": "/data-status"
     }
   ]
 }
