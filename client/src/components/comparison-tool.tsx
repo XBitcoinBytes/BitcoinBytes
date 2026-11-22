@@ -1,6 +1,7 @@
 import { friendlyError, amountFromSearch, syncAmountToUrl } from '@/lib/compareHelpers';
 import { usePriceClock } from '@/hooks/use-bitcoin-price';
 import { useState, useCallback } from 'react';
+import { Link2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { ExternalLink, RefreshCw, AlertTriangle, Clock, CheckCircle, Info, Trophy } from 'lucide-react';
 
@@ -215,6 +216,7 @@ export function ComparisonTool() {
   const initial = (typeof window !== 'undefined' && amountFromSearch(window.location.search)) || 100;
   const [inputValue, setInputValue] = useState(String(initial));
   const [submittedAmount, setSubmittedAmount] = useState(initial);
+  const [copied, setCopied] = useState(false);
 
   const { data, isFetching, isLoading, error, refetch } = useQuery<ComparisonResponse, Error>({
     queryKey: ['compare', submittedAmount],
@@ -334,6 +336,13 @@ export function ComparisonTool() {
             <div className="flex items-center gap-2 text-xs text-white/60">
               <Clock className="w-3 h-3" aria-hidden="true" />
               <span aria-live="polite">{isFetching ? 'Refreshing…' : new Date(data.generatedAt).toLocaleTimeString()}</span>
+              <button
+                onClick={() => { navigator.clipboard?.writeText(window.location.href).then(() => setCopied(true), () => {}); setTimeout(() => setCopied(false), 2000); }}
+                className="ml-1 inline-flex items-center gap-1 text-white/60 hover:text-white/80 transition-colors"
+                aria-label="Copy a link to this comparison"
+              >
+                <Link2 className="w-3.5 h-3.5" aria-hidden="true" /><span aria-live="polite">{copied ? 'Copied' : 'Link'}</span>
+              </button>
               <button
                 onClick={() => refetch()}
                 className="ml-1 text-white/60 hover:text-white/70 transition-colors"
