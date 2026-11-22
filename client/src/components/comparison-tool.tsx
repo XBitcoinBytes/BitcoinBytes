@@ -1,3 +1,4 @@
+import { friendlyError, amountFromSearch, syncAmountToUrl } from '@/lib/compareHelpers';
 import { usePriceClock } from '@/hooks/use-bitcoin-price';
 import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -203,18 +204,19 @@ function UnrankedCard({ result }: { result: UnrankedResult }) {
 async function fetchComparison(amount: number): Promise<ComparisonResponse> {
   const res = await fetch(`/api/compare?amount=${amount}`);
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(err.error || `HTTP ${res.status}`);
+    const err = await res.json().catch(() => ({} as { error?: string }));
+    throw new Error(friendlyError(res.status, err?.error));
   }
   return res.json();
 }
 
 export function ComparisonTool() {
   const now = usePriceClock();
-  const [inputValue, setInputValue] = useState('100');
-  const [submittedAmount, setSubmittedAmount] = useState(100);
+  const initial = (typeof window !== 'undefined' && amountFromSearch(window.location.search)) || 100;
+  const [inputValue, setInputValue] = useState(String(initial));
+  const [submittedAmount, setSubmittedAmount] = useState(initial);
 
-  const { data, isFetching, error, refetch } = useQuery<ComparisonResponse, Error>({
+  const { data, isFetching, isLoading, error, refetch } = useQuery<ComparisonResponse, Error>({
     queryKey: ['compare', submittedAmount],
     queryFn: () => fetchComparison(submittedAmount),
     staleTime: 0,
@@ -230,12 +232,14 @@ export function ComparisonTool() {
     const n = parseFloat(inputValue.replace(/[^0-9.]/g, ''));
     if (Number.isFinite(n) && n >= 1 && n <= 1_000_000) {
       setSubmittedAmount(n);
+      syncAmountToUrl(n);
     }
   }, [inputValue]);
 
   const handlePreset = useCallback((n: number) => {
     setInputValue(String(n));
     setSubmittedAmount(n);
+    syncAmountToUrl(n);
   }, []);
 
   return (
@@ -290,14 +294,14 @@ export function ComparisonTool() {
       </div>
 
       {/* Results */}
-      {isFetching && (
-        <div className="flex items-center justify-center gap-3 py-16 text-white/60">
+      {isFetching && (isLoading || !data || expired || data.usdAmount !== submittedAmount) && (
+        <div className="flex items-center justify-center gap-3 py-16 text-white/60" role="status">
           <RefreshCw className="w-5 h-5 animate-spin" />
           <span>Fetching live order books…</span>
         </div>
       )}
 
-      {(error || expired) && !isFetching && (
+      {(error || (expired && !isFetching)) && !(isFetching && !data) && (
         <div className="rounded-xl border border-red-700/40 bg-red-900/10 p-5 text-sm text-red-400 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
@@ -313,7 +317,7 @@ export function ComparisonTool() {
         </div>
       )}
 
-      {data && !error && !expired && !isFetching && (
+      {data && !error && !expired && data.usdAmount === submittedAmount && (
         <div>
           {/* Header row */}
           <div className="flex items-center justify-between mb-4">
@@ -328,14 +332,15 @@ export function ComparisonTool() {
               )}
             </div>
             <div className="flex items-center gap-2 text-xs text-white/60">
-              <Clock className="w-3 h-3" />
-              {new Date(data.generatedAt).toLocaleTimeString()}
+              <Clock className="w-3 h-3" aria-hidden="true" />
+              <span aria-live="polite">{isFetching ? 'Refreshing…' : new Date(data.generatedAt).toLocaleTimeString()}</span>
               <button
                 onClick={() => refetch()}
                 className="ml-1 text-white/60 hover:text-white/70 transition-colors"
                 aria-label="Refresh results"
+                disabled={isFetching}
               >
-                <RefreshCw className="w-3.5 h-3.5" />
+                <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
               </button>
             </div>
           </div>
