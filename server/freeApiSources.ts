@@ -100,7 +100,7 @@ class FreeApiSources {
           'User-Agent': 'BitcoinBytes/1.0 (Educational Platform)',
           'Accept': 'application/json'
         },
-        timeout: 5000
+        signal: AbortSignal.timeout(5000)
       });
 
       if (!response.ok) {
@@ -129,7 +129,7 @@ class FreeApiSources {
 
       return null;
     } catch (error) {
-      console.error(`Free API source ${source.name} failed:`, error.message);
+      console.error(`Free API source ${source.name} failed:`, error instanceof Error ? error.message : String(error));
       return null;
     }
   }

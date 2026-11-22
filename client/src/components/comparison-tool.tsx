@@ -96,7 +96,7 @@ function RankedCard({ result, rank, isWinner }: { result: RankedResult; rank: nu
     }`}>
       {isWinner && (
         <div className="absolute -top-3 left-4 flex items-center gap-1 bg-[#f7931a] text-black text-xs font-bold px-3 py-1 rounded-full">
-          <Trophy className="w-3 h-3" />Best Deal
+          <Trophy className="w-3 h-3" />Lowest estimated cost
         </div>
       )}
       <div className="p-5 pt-6">

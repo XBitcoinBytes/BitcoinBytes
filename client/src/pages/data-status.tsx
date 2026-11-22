@@ -1,7 +1,6 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import ParticleBackground from '@/components/particle-background';
 import { useQuery } from '@tanstack/react-query';
 import { CheckCircle, AlertTriangle, Clock, RefreshCw, Info } from 'lucide-react';
 
@@ -76,7 +75,6 @@ export default function DataStatus() {
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white">
-      <ParticleBackground />
       <Header />
       <main id="main-content" className="relative z-10 max-w-3xl mx-auto px-4 pt-24 pb-16">
         <div className="flex items-start justify-between mb-2 gap-4">

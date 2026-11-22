@@ -84,17 +84,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check cache first
       const cached = await cacheManager.getExchangeData('all');
       if (cached) {
-        bitcoinLogger.api.request(req.path, 20, 200, req.ip);
+        bitcoinLogger.api.request(req.path, 20, 200, req.ip ?? 'unknown');
         return res.json(cached);
       }
 
       const exchanges = await storage.getExchanges();
       
       await cacheManager.setExchangeData('all', exchanges);
-      bitcoinLogger.api.request(req.path, 100, 200, req.ip);
+      bitcoinLogger.api.request(req.path, 100, 200, req.ip ?? 'unknown');
       res.json(exchanges);
     } catch (error) {
-      bitcoinLogger.api.error(req.path, error, req.ip);
+      bitcoinLogger.api.error(req.path, error, req.ip ?? 'unknown');
       res.status(500).json({ message: "Failed to fetch exchanges" });
     }
   });

@@ -118,7 +118,7 @@ class InfrastructureOptimizer {
       };
     } catch (error) {
       bitcoinLogger.api.error(endpoint, error, 'system');
-      return { data, cached: false, error: error.message };
+      return { data, cached: false, error: error instanceof Error ? error.message : String(error) };
     }
   }
 
@@ -194,7 +194,7 @@ class InfrastructureOptimizer {
       return { status: 'optimized', queries: 'indexed', connections: 'pooled' };
     } catch (error) {
       console.error('Database optimization error:', error);
-      return { status: 'error', message: error.message };
+      return { status: 'error', message: error instanceof Error ? error.message : String(error) };
     }
   }
 }

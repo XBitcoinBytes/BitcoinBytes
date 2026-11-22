@@ -1,6 +1,5 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { ComparisonTool } from '@/components/comparison-tool';
-import ParticleBackground from '@/components/particle-background';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Bitcoin, ShieldCheck, ExternalLink } from 'lucide-react';
@@ -15,7 +14,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white relative">
-      <ParticleBackground />
       <Header />
 
       <main id="main-content" className="relative z-10">
@@ -29,12 +27,12 @@ export default function Home() {
             Verified sources · Live order books · No fabricated data
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4 leading-tight">
-            Buy Bitcoin at the{' '}
-            <span className="text-[#f7931a]">best price</span>
+            Compare Bitcoin{' '}
+            <span className="text-[#f7931a]">purchase estimates</span>
           </h1>
           <p className="text-lg text-white/55 max-w-xl mx-auto mb-2 leading-relaxed">
             Enter the USD amount you want to spend. We walk the live order book
-            for each exchange and rank by how much Bitcoin you actually receive
+            for each exchange and rank by estimated Bitcoin received
             after fees.
           </p>
           <p className="text-xs text-white/60 max-w-lg mx-auto">
@@ -60,7 +58,7 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-white mb-1">Verified fees only</h3>
               <p className="text-xs text-white/60 leading-relaxed">
                 We use only published entry-tier taker fees from official exchange fee schedules.
-                No estimates or invented values.
+                Quotes remain estimates; fee schedules can change.
               </p>
             </div>
             <div>

@@ -127,7 +127,7 @@ class SystemMonitor {
     }
 
     // Update endpoint metrics
-    endpointMetric.avgResponseTime = times.reduce((a, b) => a + b, 0) / times.length;
+    endpointMetric.avgResponseTime = times.reduce((a: number, b: number) => a + b, 0) / times.length;
     endpointMetric.maxResponseTime = Math.max(endpointMetric.maxResponseTime, responseTime);
     endpointMetric.minResponseTime = Math.min(endpointMetric.minResponseTime, responseTime);
 

@@ -93,7 +93,7 @@ export const bitcoinLogger = {
     },
     
     failure: (error: any, source: string) => {
-      logger.critical('Bitcoin price update failed', {
+      logger.error('Bitcoin price update failed', {
         category: 'pricing',
         error: error.message,
         source,
@@ -292,7 +292,7 @@ export const requestLogger = (req: Request, res: Response, next: Function) => {
       req.path,
       responseTime,
       res.statusCode,
-      req.ip
+      req.ip ?? 'unknown'
     );
     
     // Log slow requests
@@ -306,7 +306,7 @@ export const requestLogger = (req: Request, res: Response, next: Function) => {
 
 // Error logging middleware
 export const errorLogger = (error: any, req: Request, res: Response, next: Function) => {
-  bitcoinLogger.api.error(req.path, error, req.ip);
+  bitcoinLogger.api.error(req.path, error, req.ip ?? 'unknown');
   next(error);
 };
 

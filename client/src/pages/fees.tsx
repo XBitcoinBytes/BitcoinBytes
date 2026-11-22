@@ -1,7 +1,6 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import ParticleBackground from '@/components/particle-background';
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
@@ -22,7 +21,6 @@ export default function Fees() {
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white">
-      <ParticleBackground />
       <Header />
       <main id="main-content" className="relative z-10 max-w-3xl mx-auto px-4 pt-24 pb-16">
         <h1 className="text-3xl font-bold text-white mb-2">Spreads &amp; Fees Guide</h1>

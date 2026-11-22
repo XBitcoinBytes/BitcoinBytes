@@ -50,27 +50,13 @@ export interface IStorage {
   incrementNewsViews(id: number): Promise<void>;
   incrementNewsShares(id: number): Promise<void>;
   
-  // Newsletter operations
-  subscribeToNewsletter(subscription: InsertNewsletterSubscription): Promise<NewsletterSubscription>;
-  getNewsletterSubscription(email: string): Promise<NewsletterSubscription | undefined>;
-  updateNewsletterSubscription(email: string, updates: Partial<NewsletterSubscription>): Promise<NewsletterSubscription | undefined>;
-  unsubscribeFromNewsletter(email: string): Promise<boolean>;
-  
-  // Price alert operations
-  createPriceAlert(alert: InsertPriceAlert): Promise<PriceAlert>;
-  getPriceAlerts(email: string): Promise<PriceAlert[]>;
-  updatePriceAlert(id: number, updates: Partial<PriceAlert>): Promise<PriceAlert | undefined>;
-  deletePriceAlert(id: number): Promise<boolean>;
-  getActivePriceAlerts(): Promise<PriceAlert[]>;
-  
   // Moving Average operations
   getMovingAverageData(): Promise<MovingAverageData>;
   
   // Liquidity Depth operations
   getLiquidityDepth(exchangeId?: number): Promise<LiquidityDepthData[]>;
   
-  // Market data operations (for AI analysis)
-  getMarketData(): Promise<any>;
+  // Market data operations
   getHistoricalData(): Promise<any[]>;
 }
 
@@ -79,7 +65,6 @@ export class MemStorage implements IStorage {
   private prices: Map<number, BitcoinPrice>;
   private news: Map<number, NewsArticle>;
   private historicalPrices: Map<number, HistoricalPrice>;
-  private newsletters: Map<string, NewsletterSubscription>;
   private currentId: number;
   private lastPriceUpdate: Date | null = null;
   private priceUpdateInterval = 300000; // 5 minutes - dramatically reduced to prevent rate limiting
@@ -97,7 +82,6 @@ export class MemStorage implements IStorage {
     this.prices = new Map();
     this.news = new Map();
     this.historicalPrices = new Map();
-    this.newsletters = new Map();
     this.currentId = 1;
     
     // Initialize with default exchanges
@@ -564,51 +548,12 @@ export class MemStorage implements IStorage {
     }
   }
 
-  async subscribeToNewsletter(email: string): Promise<NewsletterSubscription> {
-    // Check if email is already subscribed
-    if (this.newsletters.has(email)) {
-      const existing = this.newsletters.get(email)!;
-      if (existing.isActive) {
-        throw new Error("Email is already subscribed");
-      } else {
-        // Reactivate subscription
-        existing.isActive = true;
-        existing.subscribedAt = new Date();
-        this.newsletters.set(email, existing);
-        return existing;
-      }
-    }
-
-    const subscription: NewsletterSubscription = {
-      id: this.currentId++,
-      email,
-      subscribedAt: new Date(),
-      isActive: true,
-    };
-
-    this.newsletters.set(email, subscription);
-    return subscription;
-  }
-
   async getMovingAverageData(): Promise<MovingAverageData> {
     throw new Error('Verified moving averages unavailable');
   }
 
   async getLiquidityDepth(exchangeId?: number): Promise<LiquidityDepthData[]> {
     throw new Error('Verified liquidity data unavailable');
-  }
-
-  async getMarketData(): Promise<any> {
-    const priceComparison = await this.getPriceComparison();
-    const exchanges = await this.getExchanges();
-    
-    return {
-      currentPrice: priceComparison.bestPrice,
-      volume24h: priceComparison.totalVolume,
-      change24h: priceComparison.averageChange,
-      exchanges: exchanges.length,
-      timestamp: new Date()
-    };
   }
 
   async getHistoricalData(): Promise<any[]> {

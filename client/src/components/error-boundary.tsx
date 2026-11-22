@@ -80,7 +80,7 @@ function DefaultErrorFallback({ error, resetError }: DefaultErrorFallbackProps) 
           </div>
           <CardTitle className="text-2xl text-white">Something went wrong</CardTitle>
           <CardDescription className="text-gray-400">
-            We encountered an unexpected error. Our team has been notified and is working on a fix.
+            Something went wrong while loading this page. Please reload, or try again in a few minutes.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">

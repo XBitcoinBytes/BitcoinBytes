@@ -269,7 +269,7 @@ export const ipWhitelist = {
   
   checkAdminAccess: (req: Request, res: Response, next: NextFunction) => {
     if (req.path.startsWith('/api/admin/') || req.path.includes('emergency-update')) {
-      const clientIP = req.ip;
+      const clientIP = req.ip ?? '';
       
       if (!ipWhitelist.adminIPs.includes(clientIP)) {
         securityMonitor.logSecurityEvent('unauthorized_admin_access', {
