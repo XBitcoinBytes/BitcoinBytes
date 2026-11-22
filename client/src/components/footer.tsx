@@ -1,4 +1,5 @@
-import { Bitcoin, ExternalLink } from 'lucide-react';
+import { Bitcoin, ExternalLink, Youtube } from 'lucide-react';
+import { CHANNEL_URL, X_URL, X_HANDLE, PODCAST_NAME } from '@/content/channel';
 import { Link } from 'wouter';
 
 const COLUMNS = [
@@ -43,15 +44,26 @@ export function Footer() {
               Transparent Bitcoin purchase price comparison. Live order books,
               verified fees, no fabricated data.
             </p>
-            <a
-              href="https://twitter.com/xbitcoinbytes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-white/60 hover:text-[#f7931a] transition-colors"
-              aria-label="@xbitcoinbytes on X (Twitter)"
-            >
-              @xbitcoinbytes <ExternalLink className="w-3 h-3" aria-hidden="true" />
-            </a>
+            <div className="flex flex-col gap-2">
+              <a
+                href={CHANNEL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-white/70 hover:text-[#f7931a] transition-colors"
+                aria-label={`${PODCAST_NAME} on YouTube (opens in a new tab)`}
+              >
+                <Youtube className="w-3.5 h-3.5" aria-hidden="true" /> YouTube: the podcast <ExternalLink className="w-3 h-3" aria-hidden="true" />
+              </a>
+              <a
+                href={X_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-white/70 hover:text-[#f7931a] transition-colors"
+                aria-label={`${X_HANDLE} on X (opens in a new tab)`}
+              >
+                {X_HANDLE} on X <ExternalLink className="w-3 h-3" aria-hidden="true" />
+              </a>
+            </div>
           </div>
 
           {/* Nav columns */}

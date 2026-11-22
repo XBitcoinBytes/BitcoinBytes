@@ -13,6 +13,8 @@ export interface Concept {
   explanation: string;
   keyPoints: string[];
   example: string;
+  /** A real BitcoinBytes episode on the topic (id + title from the channel feed). */
+  relatedEpisode?: { videoId: string; title: string };
 }
 
 export const CONCEPTS: Concept[] = [
@@ -49,6 +51,7 @@ export const CONCEPTS: Concept[] = [
     ],
     example:
       'The block reward started at 50 BTC in 2009 and has halved several times since. Each halving cuts new issuance in half overnight.',
+    relatedEpisode: { videoId: 'xwMvHVfykms', title: 'Episode 15: “Everything Divided by 21 Million”' },
   },
   {
     id: 'mining',
@@ -66,6 +69,7 @@ export const CONCEPTS: Concept[] = [
     ],
     example:
       'If more miners join, blocks briefly arrive faster; at the next difficulty adjustment the target gets harder and the average returns to about 10 minutes.',
+    relatedEpisode: { videoId: '00SG-dICGY0', title: 'Episode 14: “Softwar”' },
   },
   {
     id: 'keys-and-wallets',
@@ -100,6 +104,7 @@ export const CONCEPTS: Concept[] = [
     ],
     example:
       'Sending $20 or $20,000 of bitcoin in a similarly sized transaction costs about the same network fee.',
+    relatedEpisode: { videoId: 'ZHiGPr2Pj84', title: 'Episode 21: “The Blocksize War”' },
   },
   {
     id: 'lightning',
@@ -117,6 +122,7 @@ export const CONCEPTS: Concept[] = [
     ],
     example:
       'A coffee shop can accept a Lightning payment that confirms almost instantly, instead of waiting for an on-chain confirmation.',
+    relatedEpisode: { videoId: '6mLZ_zJIRYk', title: 'Episode 20: “Mastering the Lightning Network”' },
   },
 ];
 

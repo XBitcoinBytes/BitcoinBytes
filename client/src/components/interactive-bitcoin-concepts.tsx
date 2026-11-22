@@ -1,4 +1,4 @@
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Youtube } from 'lucide-react';
 import { CONCEPTS, type Level } from '@/content/learn';
 
 const LEVEL_STYLES: Record<Level, string> = {
@@ -39,6 +39,18 @@ export default function InteractiveBitcoinConcepts() {
             <div className="rounded-lg border border-white/10 bg-black/30 p-3">
               <span className="font-semibold text-white">Example: </span>{c.example}
             </div>
+            {c.relatedEpisode && (
+              <a
+                href={`https://www.youtube.com/watch?v=${c.relatedEpisode.videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-[#f7931a] underline underline-offset-2 hover:text-[#ffb04d]"
+              >
+                <Youtube className="h-4 w-4" aria-hidden="true" />
+                Go deeper on the podcast: {c.relatedEpisode.title}
+                <span className="sr-only">(opens YouTube in a new tab)</span>
+              </a>
+            )}
           </div>
         </details>
       ))}

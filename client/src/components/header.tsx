@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Bitcoin, Menu, X, ExternalLink } from 'lucide-react';
+import { Bitcoin, Menu, X, ExternalLink, Youtube } from 'lucide-react';
+import { CHANNEL_URL, X_URL, X_HANDLE } from '@/content/channel';
 
 const NAV_LINKS = [
   { href: '/', label: 'Compare' },
@@ -41,13 +42,22 @@ export function Header() {
             </Link>
           ))}
           <a
-            href="https://twitter.com/xbitcoinbytes"
+            href={CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-2 flex items-center gap-1 text-xs text-white/60 hover:text-white/70 border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
-            aria-label="@xbitcoinbytes on X (Twitter)"
+            className="ml-2 flex items-center gap-1 text-xs text-white/70 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
+            aria-label="BitcoinBytes on YouTube (opens in a new tab)"
           >
-            @xbitcoinbytes <ExternalLink className="w-3 h-3" aria-hidden="true" />
+            <Youtube className="w-3.5 h-3.5 text-[#f7931a]" aria-hidden="true" /> YouTube
+          </a>
+          <a
+            href={X_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-1 flex items-center gap-1 text-xs text-white/70 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
+            aria-label={`${X_HANDLE} on X (opens in a new tab)`}
+          >
+            {X_HANDLE} <ExternalLink className="w-3 h-3" aria-hidden="true" />
           </a>
         </nav>
 
@@ -86,12 +96,20 @@ export function Header() {
             </Link>
           ))}
           <a
-            href="https://twitter.com/xbitcoinbytes"
+            href={CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 px-3 py-2 text-sm text-white/60 hover:text-white/70 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm text-white/70 hover:text-white transition-colors"
           >
-            @xbitcoinbytes <ExternalLink className="w-3 h-3" />
+            <Youtube className="w-4 h-4 text-[#f7931a]" aria-hidden="true" /> YouTube <ExternalLink className="w-3 h-3" aria-hidden="true" />
+          </a>
+          <a
+            href={X_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 px-3 py-2 text-sm text-white/70 hover:text-white transition-colors"
+          >
+            {X_HANDLE} on X <ExternalLink className="w-3 h-3" aria-hidden="true" />
           </a>
         </nav>
       )}

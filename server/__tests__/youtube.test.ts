@@ -43,3 +43,13 @@ describe('YouTube channel feed', () => {
     expect(f.videos.length).toBeGreaterThan(5);
   });
 });
+
+import { CONCEPTS } from '../../client/src/content/learn';
+describe('concept → episode links', () => {
+  it('only point at real channel videos', () => {
+    const ids = new Set(parseChannelFeed(XML, 100).map((v) => v.id));
+    const linked = CONCEPTS.filter((c) => c.relatedEpisode);
+    expect(linked.length).toBeGreaterThan(0);
+    for (const c of linked) expect(ids.has(c.relatedEpisode!.videoId)).toBe(true);
+  });
+});
