@@ -103,7 +103,7 @@ export default function DataStatus() {
             <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-medium mb-1">Could not fetch provider status</p>
-              <p className="text-red-400/60">{error.message}</p>
+              <p className="text-red-300">{error.message}</p>
             </div>
           </div>
         )}

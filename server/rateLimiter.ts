@@ -7,14 +7,14 @@ interface RateLimitRule {
   skipSuccessfulRequests?: boolean;
 }
 
-class EnhancedRateLimiter {
+export class EnhancedRateLimiter {
   private requestCounts = new Map<string, { count: number; resetTime: number; }>();
   private rules: RateLimitRule[] = [
     // API endpoints
     { endpoint: '/api/prices', maxRequests: 120, windowMs: 60000 }, // 2 requests per second
     { endpoint: '/api/news', maxRequests: 60, windowMs: 60000 }, // 1 request per second
     { endpoint: '/api/charts', maxRequests: 30, windowMs: 60000 }, // 0.5 requests per second
-    { endpoint: '/api/ai', maxRequests: 20, windowMs: 60000 }, // AI endpoints are expensive
+    { endpoint: '/api/compare', maxRequests: 60, windowMs: 60000 }, // live exchange comparison
     { endpoint: '/api/market', maxRequests: 60, windowMs: 60000 }, // Market data
     // General fallback
     { endpoint: '*', maxRequests: 100, windowMs: 60000 }, // Default rate limit
@@ -22,13 +22,15 @@ class EnhancedRateLimiter {
 
   constructor() {
     // Clean up expired entries every 5 minutes
-    setInterval(() => this.cleanup(), 300000);
+    setInterval(() => this.cleanup(), 300000).unref?.();
   }
 
   middleware() {
     return (req: Request, res: Response, next: NextFunction) => {
-      const clientKey = this.getClientKey(req);
-      const rule = this.findRule(req.path);
+      // Mounted at '/api', so req.path is relative; match rules on the full path.
+      const fullPath = (req.baseUrl || '') + req.path;
+      const rule = this.findRule(fullPath);
+      const clientKey = this.getClientKey(req, rule);
       
       if (!rule) {
         return next();
@@ -49,6 +51,7 @@ class EnhancedRateLimiter {
       // Check if limit exceeded
       if (current.count >= rule.maxRequests) {
         const remainingTime = Math.ceil((current.resetTime - now) / 1000);
+        res.set('Retry-After', String(remainingTime));
         res.status(429).json({
           error: 'Too Many Requests',
           message: `Rate limit exceeded for ${rule.endpoint}`,
@@ -74,10 +77,10 @@ class EnhancedRateLimiter {
     };
   }
 
-  private getClientKey(req: Request): string {
-    // Use IP address as client identifier
-    const ip = req.ip || req.connection.remoteAddress || 'unknown';
-    const endpoint = this.findRule(req.path)?.endpoint || '*';
+  private getClientKey(req: Request, rule?: RateLimitRule): string {
+    // req.ip honours 'trust proxy' (one hop), so spoofed X-Forwarded-For prefixes are ignored.
+    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+    const endpoint = rule?.endpoint || '*';
     return `${ip}:${endpoint}`;
   }
 

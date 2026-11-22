@@ -88,19 +88,19 @@ export default function Home() {
           aria-label="Learn more links"
         >
           <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-4 text-sm">
-            <a href="/methodology" className="text-[#f7931a]/70 hover:text-[#f7931a] underline underline-offset-4 transition-colors">
+            <a href="/methodology" className="text-[#f7931a] hover:text-[#f7931a] underline underline-offset-4 transition-colors">
               How we calculate results
             </a>
             <span className="text-white/60 hidden sm:inline">·</span>
-            <a href="/fees" className="text-[#f7931a]/70 hover:text-[#f7931a] underline underline-offset-4 transition-colors">
+            <a href="/fees" className="text-[#f7931a] hover:text-[#f7931a] underline underline-offset-4 transition-colors">
               Spreads &amp; fees explained
             </a>
             <span className="text-white/60 hidden sm:inline">·</span>
-            <a href="/beginners" className="text-[#f7931a]/70 hover:text-[#f7931a] underline underline-offset-4 transition-colors">
+            <a href="/beginners" className="text-[#f7931a] hover:text-[#f7931a] underline underline-offset-4 transition-colors">
               New to Bitcoin?
             </a>
             <span className="text-white/60 hidden sm:inline">·</span>
-            <a href="/data-status" className="text-[#f7931a]/70 hover:text-[#f7931a] underline underline-offset-4 transition-colors">
+            <a href="/data-status" className="text-[#f7931a] hover:text-[#f7931a] underline underline-offset-4 transition-colors">
               Data &amp; provider status
             </a>
           </div>

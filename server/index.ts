@@ -83,11 +83,17 @@ app.use((req, res, next) => {
   // Serves both the API and the client. Hosts like Railway/Render/Fly inject PORT;
   // default to 5000 (the Replit-mapped port) when it is not set.
   const port = Number.parseInt(process.env.PORT ?? "", 10) || 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  // No reusePort: a stale process must not silently share the port with a new one.
+  server.listen({ port, host: "0.0.0.0" }, () => {
     log(`serving on port ${port}`);
   });
+
+  // logger.ts registers SIGTERM/SIGINT listeners for logging, which disables Node's default
+  // exit-on-signal; close the server and exit so restarts and redeploys are clean.
+  for (const signal of ["SIGTERM", "SIGINT"] as const) {
+    process.once(signal, () => {
+      server.close(() => process.exit(0));
+      setTimeout(() => process.exit(0), 8000).unref();
+    });
+  }
 })();

@@ -67,7 +67,7 @@ export default function Methodology() {
             liquidity at tight prices will rank higher than one with thin books even at a comparable
             headline price.
           </p>
-          <p className="text-yellow-400/70 bg-yellow-900/10 border border-yellow-700/20 rounded-lg p-3">
+          <p className="text-yellow-300 bg-yellow-900/10 border border-yellow-700/20 rounded-lg p-3">
             If the order book does not have sufficient depth to fill the entire order amount, that
             provider is listed as "incomplete" and excluded from ranking. No partial result is
             fabricated to fill the gap.
@@ -154,7 +154,7 @@ effective_rate = usd_amount / btc_received`}
             reliability and regulatory status, self-custody options, customer support quality,
             security practices, geographic availability, and your own risk tolerance.
           </p>
-          <p className="text-red-400/70">
+          <p className="text-red-300">
             Cryptocurrency purchases involve risk. Prices can change between this estimate and
             execution. Past performance and rankings do not guarantee future results.
           </p>

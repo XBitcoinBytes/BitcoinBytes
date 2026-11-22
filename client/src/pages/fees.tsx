@@ -44,7 +44,7 @@ export default function Fees() {
                 the fee BitcoinBytes uses in its ranking calculations — it is published publicly and
                 stable enough to verify.
               </p>
-              <div className="mt-3 text-xs font-mono text-[#f7931a]/80 bg-black/20 rounded p-2">
+              <div className="mt-3 text-xs font-mono text-[#f7931a] bg-black/20 rounded p-2">
                 Example: $500 × 0.26% = $1.30 fee on Kraken
               </div>
             </div>
@@ -68,7 +68,7 @@ export default function Fees() {
                 Many providers charge extra for certain funding methods. Instant bank transfers,
                 debit cards, and credit cards often carry higher fees than ACH (bank transfer).
               </p>
-              <p className="text-yellow-400/70">
+              <p className="text-yellow-300">
                 BitcoinBytes assumes USD already funded via the platform's free/default method
                 (typically ACH bank transfer). It does not include payment-method fees. Always check
                 the provider's fee page for your specific funding method.
@@ -90,7 +90,7 @@ export default function Fees() {
           </p>
           <p>
             For long-term Bitcoin storage, self-custody is generally recommended. See our{' '}
-            <a href="/beginners" className="text-[#f7931a]/70 hover:text-[#f7931a] underline">
+            <a href="/beginners" className="text-[#f7931a] hover:text-[#f7931a] underline">
               beginner's guide
             </a>{' '}
             for more on this.
@@ -146,7 +146,7 @@ export default function Fees() {
           <p className="text-white/60 text-xs">
             Exchange fees change. We cite the fee schedule source with each result — check it before
             transacting. This table was verified at the time of our last code update; see{' '}
-            <a href="/methodology" className="text-[#f7931a]/60 hover:text-[#f7931a] underline">Methodology</a>{' '}
+            <a href="/methodology" className="text-[#f7931a] hover:text-[#f7931a] underline">Methodology</a>{' '}
             for how fees are applied.
           </p>
         </Section>

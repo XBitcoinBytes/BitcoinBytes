@@ -115,7 +115,7 @@ function RankedCard({ result, rank, isWinner }: { result: RankedResult; rank: nu
             href={result.providerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-shrink-0 flex items-center gap-1 text-xs text-[#f7931a] hover:text-[#f7931a]/80 border border-[#f7931a]/30 hover:border-[#f7931a]/60 rounded-lg px-3 py-1.5 transition-colors"
+            className="flex-shrink-0 flex items-center gap-1 text-xs text-[#f7931a] hover:text-[#f7931a] border border-[#f7931a]/30 hover:border-[#f7931a]/60 rounded-lg px-3 py-1.5 transition-colors"
             aria-label={`Open ${result.providerName} to buy Bitcoin`}
           >
             Buy <ExternalLink className="w-3 h-3" />
@@ -175,7 +175,7 @@ function UnrankedCard({ result }: { result: UnrankedResult }) {
             <p className="text-xs text-white/60 italic">
               {result.partialData.publishedFeeNote}
               {result.partialData.feeUrl && (
-                <> · <a href={result.partialData.feeUrl} target="_blank" rel="noopener noreferrer" className="text-[#f7931a]/60 hover:text-[#f7931a] underline">fee details</a></>
+                <> · <a href={result.partialData.feeUrl} target="_blank" rel="noopener noreferrer" className="text-[#f7931a] hover:text-[#f7931a] underline">fee details</a></>
               )}
             </p>
           )}
@@ -302,7 +302,7 @@ export function ComparisonTool() {
           <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium mb-1">Price unavailable</p>
-            <p className="text-red-400/70">{error?.message || 'Quotes have expired. Refresh to fetch current prices.'}</p>
+            <p className="text-red-300">{error?.message || 'Quotes have expired. Refresh to fetch current prices.'}</p>
             <button
               onClick={() => refetch()}
               className="mt-2 text-xs text-red-400 underline hover:text-red-300"
@@ -324,7 +324,7 @@ export function ComparisonTool() {
                 {' '}USD
               </span>
               {data.hasStaleData && (
-                <span className="ml-2 text-xs text-yellow-400/80">· some data may be stale</span>
+                <span className="ml-2 text-xs text-yellow-300">· some data may be stale</span>
               )}
             </div>
             <div className="flex items-center gap-2 text-xs text-white/60">
@@ -346,7 +346,7 @@ export function ComparisonTool() {
               <AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
               <div className="text-sm">
                 <p className="text-yellow-300 font-medium mb-1">Not enough data to rank providers</p>
-                <p className="text-yellow-400/60">
+                <p className="text-yellow-300">
                   Fewer than 3 providers returned verified results. No winner is declared.
                   {data.ranked.length > 0
                     ? ` ${data.ranked.length} result${data.ranked.length !== 1 ? 's' : ''} shown for reference.`
@@ -396,7 +396,7 @@ export function ComparisonTool() {
             <span className="text-white/50 font-medium">Estimates only. </span>
             {data.disclaimer}
             {' '}
-            <a href="/methodology" className="text-[#f7931a]/60 hover:text-[#f7931a] underline">
+            <a href="/methodology" className="text-[#f7931a] hover:text-[#f7931a] underline">
               Full methodology →
             </a>
           </div>

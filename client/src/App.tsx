@@ -47,7 +47,7 @@ function makeRouteFallback(routeName: string): React.ComponentType<{ error: Erro
           </p>
           <a
             href="/"
-            className="text-[#f7931a] hover:text-[#f7931a]/80 underline text-sm"
+            className="text-[#f7931a] hover:text-[#f7931a] underline text-sm"
           >
             Return to comparison tool
           </a>

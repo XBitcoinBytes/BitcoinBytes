@@ -44,7 +44,7 @@ export default function Legal() {
             calculation. They are not guaranteed executable quotes. Actual amounts received may differ
             due to order routing, payment method, account tier, promotional rates, and market movement
             between the estimate and execution. See our{' '}
-            <a href="/methodology" className="text-[#f7931a]/70 hover:text-[#f7931a] underline">
+            <a href="/methodology" className="text-[#f7931a] hover:text-[#f7931a] underline">
               Methodology
             </a>{' '}
             for full details.

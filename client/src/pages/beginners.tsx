@@ -32,7 +32,7 @@ export default function Beginners() {
           Not financial advice — do your own research before purchasing.
         </p>
 
-        <div className="bg-[#f7931a]/10 border border-[#f7931a]/25 rounded-xl p-4 mb-10 text-sm text-[#f7931a]/80">
+        <div className="bg-[#f7931a]/10 border border-[#f7931a]/25 rounded-xl p-4 mb-10 text-sm text-[#f7931a]">
           <strong className="text-[#f7931a]">Not financial advice.</strong> This page explains how Bitcoin
           purchases work mechanically. It does not recommend any investment or provider. Cryptocurrency
           purchases involve substantial risk of loss.
@@ -59,7 +59,7 @@ export default function Beginners() {
             <li>
               <strong className="text-white">Choose an exchange</strong> — a regulated platform where
               you can convert USD to Bitcoin. Use our{' '}
-              <a href="/" className="text-[#f7931a]/70 hover:text-[#f7931a] underline">comparison tool</a>{' '}
+              <a href="/" className="text-[#f7931a] hover:text-[#f7931a] underline">comparison tool</a>{' '}
               to see estimated costs across providers.
             </li>
             <li>
@@ -85,7 +85,7 @@ export default function Beginners() {
         <Section id="fees-to-expect" title="Fees to expect">
           <p>
             Every exchange charges at least one type of fee. See our{' '}
-            <a href="/fees" className="text-[#f7931a]/70 hover:text-[#f7931a] underline">full fees guide</a>{' '}
+            <a href="/fees" className="text-[#f7931a] hover:text-[#f7931a] underline">full fees guide</a>{' '}
             for details. The main ones are:
           </p>
           <ul className="list-disc list-inside space-y-2 ml-2">
@@ -120,7 +120,7 @@ export default function Beginners() {
           </ul>
           <div className="flex items-start gap-3 bg-red-900/10 border border-red-700/20 rounded-xl p-4">
             <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
-            <p className="text-red-400/70">
+            <p className="text-red-300">
               <strong className="text-red-300">Never share your seed phrase.</strong> Anyone with access
               to your 12 or 24 word seed phrase can permanently steal all your Bitcoin. No legitimate
               wallet, exchange, or support agent will ever ask for it.
@@ -173,7 +173,7 @@ export default function Beginners() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[#f7931a]/60 hover:text-[#f7931a] transition-colors text-sm"
+                  className="inline-flex items-center gap-1.5 text-[#f7931a] hover:text-[#f7931a] transition-colors text-sm"
                 >
                   {label} <ExternalLink className="w-3 h-3" aria-hidden="true" />
                 </a>
