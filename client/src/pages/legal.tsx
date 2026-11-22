@@ -12,12 +12,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 export default function Legal() {
-  usePageMeta({
-    title: 'Disclosures, Terms & Privacy',
-    description:
-      'BitcoinBytes legal disclosures, terms of use, privacy policy, and support contact information.',
-    canonical: '/legal',
-  });
+  usePageMeta({ canonical: '/legal' });
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white">

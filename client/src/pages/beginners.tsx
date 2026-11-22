@@ -13,12 +13,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 export default function Beginners() {
-  usePageMeta({
-    title: 'New to Bitcoin? Beginner\'s Guide',
-    description:
-      'A plain-language guide to buying Bitcoin safely in the US: what Bitcoin is, how to choose an exchange, fees to expect, and how to keep your Bitcoin secure.',
-    canonical: '/beginners',
-  });
+  usePageMeta({ canonical: '/beginners' });
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white">

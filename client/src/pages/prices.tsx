@@ -5,7 +5,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 
 export default function PricesPage() {
-  usePageMeta({ title: 'Bitcoin Prices — BitcoinBytes', description: 'Bitcoin USD quotes fetched from public exchange feeds.', canonical: '/prices' });
+  usePageMeta({ canonical: '/prices' });
   const { data, isLoading, error, refetch } = useBitcoinPrice();
   const history = useQuery<Array<{ timestamp: string; price: number }>>({
     queryKey: ['/api/charts/bitcoin-history'], refetchInterval: 60000, retry: false

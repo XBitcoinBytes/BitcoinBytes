@@ -9,12 +9,7 @@ import { GLOSSARY, RESOURCES } from '@/content/learn';
 import { ExternalLink } from 'lucide-react';
 
 export default function Learn() {
-  usePageMeta({
-    title: 'Learn Bitcoin',
-    description:
-      'Plain-language Bitcoin education: how the network works, supply and halvings, mining, wallets and keys, fees, and Lightning, plus a glossary and trusted primary sources.',
-    canonical: '/learn',
-  });
+  usePageMeta({ canonical: '/learn' });
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white flex flex-col">

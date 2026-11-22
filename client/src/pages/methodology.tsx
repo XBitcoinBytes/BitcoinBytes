@@ -12,12 +12,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 export default function Methodology() {
-  usePageMeta({
-    title: 'Methodology',
-    description:
-      'How BitcoinBytes calculates estimated Bitcoin purchase costs using live order-book depth walking and verified published exchange fee schedules.',
-    canonical: '/methodology',
-  });
+  usePageMeta({ canonical: '/methodology' });
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white">

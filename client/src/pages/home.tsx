@@ -5,12 +5,7 @@ import { Footer } from '@/components/footer';
 import { Bitcoin, ShieldCheck, ExternalLink } from 'lucide-react';
 
 export default function Home() {
-  usePageMeta({
-    title: 'BitcoinBytes — Compare Bitcoin Purchase Prices',
-    description:
-      'Find the best price to buy Bitcoin across exchanges. Ranked by BTC received after fees, using live order books and verified published fee schedules. No fabricated data.',
-    canonical: '/',
-  });
+  usePageMeta({ canonical: '/' });
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white relative">

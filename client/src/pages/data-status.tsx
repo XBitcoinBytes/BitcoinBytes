@@ -50,12 +50,7 @@ function StatusBadge({ state }: { state: string }) {
 }
 
 export default function DataStatus() {
-  usePageMeta({
-    title: 'Data & Provider Status',
-    description:
-      'Live status of Bitcoin price data sources used in BitcoinBytes comparisons. See which exchanges are currently providing verified data.',
-    canonical: '/data-status',
-  });
+  usePageMeta({ canonical: '/data-status' });
 
   const { data, isFetching, error, refetch } = useQuery<StatusResponse, Error>({
     queryKey: ['data-status'],

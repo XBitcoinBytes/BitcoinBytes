@@ -12,12 +12,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 export default function Fees() {
-  usePageMeta({
-    title: 'Spreads & Fees Guide',
-    description:
-      'Understand Bitcoin purchase fees: taker fees, bid-ask spreads, payment method surcharges, and withdrawal costs. Plain explanations for US retail buyers.',
-    canonical: '/fees',
-  });
+  usePageMeta({ canonical: '/fees' });
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white">

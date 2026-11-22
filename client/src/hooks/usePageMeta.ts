@@ -1,18 +1,20 @@
 import { useEffect } from 'react';
+import { SITE_NAME, BASE_URL, fullTitle as makeTitle, ROUTE_META } from '@shared/routeMeta';
 
 interface PageMeta {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   canonical?: string;
   ogType?: string;
 }
 
-const SITE_NAME = 'BitcoinBytes';
-const BASE_URL = 'https://www.bitcoinbytes.org';
 
-export function usePageMeta({ title, description, canonical, ogType = 'website' }: PageMeta) {
+export function usePageMeta({ title: t, description: d, canonical, ogType = 'website' }: PageMeta) {
+  const route = canonical && !canonical.startsWith('http') ? ROUTE_META[canonical] : undefined;
+  const title = t ?? route?.title ?? SITE_NAME;
+  const description = d ?? route?.description ?? '';
   useEffect(() => {
-    const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
+    const fullTitle = makeTitle(title);
 
     document.title = fullTitle;
 
@@ -30,7 +32,9 @@ export function usePageMeta({ title, description, canonical, ogType = 'website' 
     setMeta('og:title', fullTitle, 'property');
     setMeta('og:description', description, 'property');
     setMeta('og:type', ogType, 'property');
-    if (canonical) setMeta('og:url', canonical, 'property');
+    if (canonical) setMeta('og:url', canonical.startsWith('http') ? canonical : `${BASE_URL}${canonical}`, 'property');
+    setMeta('twitter:title', fullTitle);
+    setMeta('twitter:description', description);
 
     let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (canonical) {
