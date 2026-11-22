@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import slowDown from 'express-slow-down';
 import { Request, Response, NextFunction } from 'express';
+import { clientIp } from './clientIp';
 
 /**
  * Enterprise-Grade Security Configuration
@@ -26,7 +27,7 @@ export const createRateLimit = (windowMs: number, max: number, message?: string)
     // Custom key generator for more sophisticated limiting
     // Key on client IP only (trust proxy is set). Including the User-Agent let clients
     // bypass the limit just by rotating that header.
-    keyGenerator: (req) => req.ip || 'unknown'
+    keyGenerator: (req) => clientIp(req)
   });
 };
 

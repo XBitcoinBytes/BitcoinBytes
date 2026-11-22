@@ -36,3 +36,18 @@ describe('API rate limiting (mounted at /api)', () => {
     expect(ok).toBe(100);
   });
 });
+
+import { clientIp, clientIpHeader } from '../clientIp';
+describe('client IP selection', () => {
+  const req = (h: Record<string, string>, ip = '10.0.0.5') => ({ headers: h, ip, socket: {} }) as any;
+  it('uses X-Real-IP on Railway, req.ip elsewhere', () => {
+    expect(clientIpHeader({ RAILWAY_ENVIRONMENT_ID: 'x' } as any)).toBe('x-real-ip');
+    expect(clientIpHeader({} as any)).toBeNull();
+    expect(clientIpHeader({ RAILWAY_ENVIRONMENT_ID: 'x', CLIENT_IP_HEADER: 'none' } as any)).toBeNull();
+    expect(clientIp(req({ 'x-real-ip': '203.0.113.7' }), 'x-real-ip')).toBe('203.0.113.7');
+    expect(clientIp(req({ 'x-real-ip': '203.0.113.7' }), null)).toBe('10.0.0.5');
+  });
+  it('ignores malformed header values', () => {
+    expect(clientIp(req({ 'x-real-ip': 'evil<script>' }), 'x-real-ip')).toBe('10.0.0.5');
+  });
+});

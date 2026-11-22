@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { clientIp } from './clientIp';
 
 interface RateLimitRule {
   endpoint: string;
@@ -78,8 +79,7 @@ export class EnhancedRateLimiter {
   }
 
   private getClientKey(req: Request, rule?: RateLimitRule): string {
-    // req.ip honours 'trust proxy' (one hop), so spoofed X-Forwarded-For prefixes are ignored.
-    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+    const ip = clientIp(req);
     const endpoint = rule?.endpoint || '*';
     return `${ip}:${endpoint}`;
   }
