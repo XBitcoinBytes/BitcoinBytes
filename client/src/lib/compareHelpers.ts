@@ -10,8 +10,18 @@ export function friendlyError(status: number, serverMessage?: string): string {
 /** Reads ?amount= so a comparison can be linked (e.g. from a video description). */
 export function amountFromSearch(search: string): number | null {
   const raw = new URLSearchParams(search).get('amount');
-  if (!raw) return null;
-  const n = Number(raw.replace(/[^0-9.]/g, ''));
+  return raw ? parseUsd(raw) : null;
+}
+
+/**
+ * Strict USD parser for the input box and ?amount=. Accepts "250", "$1,000", "99.5" and
+ * scientific notation the number input allows ("1e3"); rejects anything else instead of
+ * stripping characters (which turned "1e12" into 112 and "<script>1" into 1).
+ */
+export function parseUsd(raw: string): number | null {
+  const t = raw.trim().replace(/^\$/, '').replace(/,(?=\d{3}\b)/g, '');
+  if (!/^(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i.test(t)) return null;
+  const n = Number(t);
   return Number.isFinite(n) && n >= 1 && n <= 1_000_000 ? Math.round(n * 100) / 100 : null;
 }
 

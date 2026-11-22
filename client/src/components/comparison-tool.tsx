@@ -1,4 +1,4 @@
-import { friendlyError, amountFromSearch, syncAmountToUrl } from '@/lib/compareHelpers';
+import { friendlyError, amountFromSearch, syncAmountToUrl, parseUsd } from '@/lib/compareHelpers';
 import { usePriceClock } from '@/hooks/use-bitcoin-price';
 import { useState, useCallback } from 'react';
 import { Link2 } from 'lucide-react';
@@ -217,6 +217,7 @@ export function ComparisonTool() {
   const [inputValue, setInputValue] = useState(String(initial));
   const [submittedAmount, setSubmittedAmount] = useState(initial);
   const [copied, setCopied] = useState(false);
+  const [invalid, setInvalid] = useState(false);
 
   const { data, isFetching, isLoading, error, refetch } = useQuery<ComparisonResponse, Error>({
     queryKey: ['compare', submittedAmount],
@@ -231,8 +232,9 @@ export function ComparisonTool() {
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    const n = parseFloat(inputValue.replace(/[^0-9.]/g, ''));
-    if (Number.isFinite(n) && n >= 1 && n <= 1_000_000) {
+    const n = parseUsd(inputValue);
+    setInvalid(n === null);
+    if (n !== null) {
       setSubmittedAmount(n);
       syncAmountToUrl(n);
     }
@@ -240,6 +242,7 @@ export function ComparisonTool() {
 
   const handlePreset = useCallback((n: number) => {
     setInputValue(String(n));
+    setInvalid(false);
     setSubmittedAmount(n);
     syncAmountToUrl(n);
   }, []);
@@ -266,6 +269,8 @@ export function ComparisonTool() {
               onChange={(e) => setInputValue(e.target.value)}
               className="w-full bg-black/30 border border-white/15 text-white rounded-xl pl-8 pr-4 py-3 text-lg font-mono focus:outline-none focus:ring-2 focus:ring-[#f7931a]/50 focus:border-[#f7931a]/50 transition-all"
               aria-label="USD amount to spend on Bitcoin"
+              aria-invalid={invalid || undefined}
+              aria-describedby={invalid ? 'amount-error' : undefined}
             />
           </div>
           <button
@@ -277,6 +282,9 @@ export function ComparisonTool() {
           </button>
         </form>
 
+        {invalid && (
+          <p id="amount-error" className="-mt-2 mb-3 text-xs text-red-300" role="alert">Enter an amount from $1 to $1,000,000.</p>
+        )}
         <div className="flex flex-wrap gap-2" role="group" aria-label="Preset amounts">
           {PRESETS.map((preset) => (
             <button
