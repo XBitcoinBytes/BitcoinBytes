@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://bitcoinbytes.org/sitemap.xml
+Sitemap: https://www.bitcoinbytes.org/sitemap.xml
 
 # Crawl-delay for responsible crawling
 Crawl-delay: 1
