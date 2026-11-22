@@ -390,19 +390,28 @@ export function ComparisonTool() {
 
           {/* Unranked providers */}
           {data.unranked.length > 0 && (
-            <div className="space-y-3 mb-6">
-              <h3 className="text-sm font-semibold text-white/60 uppercase tracking-wider flex items-center gap-2">
-                <Info className="w-4 h-4" />
-                Other providers — not ranked
-              </h3>
-              <p className="text-xs text-white/60 mb-3">
-                These providers could not supply verified amount-specific price and fee data.
-                No values are fabricated. Visit each provider directly for a real quote.
+            <details className="group mb-6 rounded-xl border border-white/8 bg-white/[0.02] p-4">
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f7931a] rounded">
+                <span>
+                  <span className="text-sm font-semibold text-white/70 uppercase tracking-wider flex items-center gap-2">
+                    <Info className="w-4 h-4" aria-hidden="true" />
+                    {data.unranked.length} other providers, not ranked
+                  </span>
+                  <span className="block text-xs text-white/60 mt-1">{data.unranked.map((r) => r.providerName).join(' · ')}</span>
+                </span>
+                <span className="text-xs text-[#f7931a] underline underline-offset-2 group-open:hidden">Show why</span>
+                <span className="text-xs text-[#f7931a] underline underline-offset-2 hidden group-open:inline">Hide</span>
+              </summary>
+              <p className="text-xs text-white/60 mt-3 mb-3">
+                These providers could not supply verified
+                amount-specific price and fee data. No values are fabricated. Visit each provider directly for a real quote.
               </p>
-              {data.unranked.map((result) => (
-                <UnrankedCard key={result.providerId} result={result} />
-              ))}
-            </div>
+              <div className="space-y-3">
+                {data.unranked.map((result) => (
+                  <UnrankedCard key={result.providerId} result={result} />
+                ))}
+              </div>
+            </details>
           )}
 
           {/* Disclaimer */}
