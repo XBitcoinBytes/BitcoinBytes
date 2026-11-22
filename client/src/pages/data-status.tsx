@@ -84,14 +84,14 @@ export default function DataStatus() {
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 border border-white/10 hover:border-white/20 rounded-lg px-3 py-2 transition-colors disabled:opacity-40"
+            className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white/70 border border-white/10 hover:border-white/20 rounded-lg px-3 py-2 transition-colors disabled:opacity-40"
             aria-label="Refresh provider status"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
-        <p className="text-white/40 text-sm mb-8">
+        <p className="text-white/60 text-sm mb-8">
           Live status of data sources used in comparison rankings.
           {data && (
             <span className="ml-1">Updated {new Date(data.generatedAt).toLocaleTimeString()}.</span>
@@ -109,7 +109,7 @@ export default function DataStatus() {
         )}
 
         {isFetching && !data && (
-          <div className="flex items-center gap-3 py-16 text-white/40">
+          <div className="flex items-center gap-3 py-16 text-white/60">
             <RefreshCw className="w-5 h-5 animate-spin" />Checking all providers…
           </div>
         )}
@@ -123,7 +123,7 @@ export default function DataStatus() {
                     <StatusBadge state={p.state} />
                     <span className="text-white font-medium text-sm">{p.providerName}</span>
                     {p.takerFeeRate !== undefined && (
-                      <span className="text-xs text-white/30 font-mono">
+                      <span className="text-xs text-white/60 font-mono">
                         {(p.takerFeeRate * 100).toFixed(3)}% taker
                       </span>
                     )}
@@ -135,16 +135,16 @@ export default function DataStatus() {
                   )}
                 </div>
                 {p.reason && (
-                  <p className="text-xs text-white/35 mt-2 leading-relaxed">{p.reason}</p>
+                  <p className="text-xs text-white/60 mt-2 leading-relaxed">{p.reason}</p>
                 )}
                 {p.feeRateSource && (
-                  <p className="text-xs text-white/25 mt-1">Fee source: {p.feeRateSource}</p>
+                  <p className="text-xs text-white/60 mt-1">Fee source: {p.feeRateSource}</p>
                 )}
                 {p.orderBookSource && (
-                  <p className="text-xs text-white/25">Order book: {p.orderBookSource}</p>
+                  <p className="text-xs text-white/60">Order book: {p.orderBookSource}</p>
                 )}
                 {p.dataAgeMs !== undefined && (
-                  <p className="text-xs text-white/20 mt-1">
+                  <p className="text-xs text-white/60 mt-1">
                     Data age: {Math.round(p.dataAgeMs / 1000)}s
                   </p>
                 )}

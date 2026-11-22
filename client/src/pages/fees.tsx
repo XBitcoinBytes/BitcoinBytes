@@ -26,7 +26,7 @@ export default function Fees() {
       <Header />
       <main id="main-content" className="relative z-10 max-w-3xl mx-auto px-4 pt-24 pb-16">
         <h1 className="text-3xl font-bold text-white mb-2">Spreads &amp; Fees Guide</h1>
-        <p className="text-white/40 text-sm mb-10">
+        <p className="text-white/60 text-sm mb-10">
           Understanding what you actually pay when buying Bitcoin.
         </p>
 
@@ -117,7 +117,7 @@ export default function Fees() {
                   <td className="px-4 py-3 text-white font-medium">Kraken</td>
                   <td className="px-4 py-3 text-right font-mono text-[#f7931a]">0.26%</td>
                   <td className="px-4 py-3">
-                    <a href="https://www.kraken.com/en-us/features/fee-schedule" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[#f7931a] underline">
+                    <a href="https://www.kraken.com/en-us/features/fee-schedule" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#f7931a] underline">
                       kraken.com fee schedule
                     </a>
                   </td>
@@ -126,7 +126,7 @@ export default function Fees() {
                   <td className="px-4 py-3 text-white font-medium">Crypto.com Exchange</td>
                   <td className="px-4 py-3 text-right font-mono text-[#f7931a]">0.075%</td>
                   <td className="px-4 py-3">
-                    <a href="https://crypto.com/exchange/document/fees-limits" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[#f7931a] underline">
+                    <a href="https://crypto.com/exchange/document/fees-limits" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#f7931a] underline">
                       crypto.com fees &amp; limits
                     </a>
                   </td>
@@ -135,7 +135,7 @@ export default function Fees() {
                   <td className="px-4 py-3 text-white font-medium">Binance.US</td>
                   <td className="px-4 py-3 text-right font-mono text-[#f7931a]">0.60%</td>
                   <td className="px-4 py-3">
-                    <a href="https://www.binance.us/fees" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[#f7931a] underline">
+                    <a href="https://www.binance.us/fees" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#f7931a] underline">
                       binance.us/fees
                     </a>
                   </td>
@@ -143,7 +143,7 @@ export default function Fees() {
               </tbody>
             </table>
           </div>
-          <p className="text-white/35 text-xs">
+          <p className="text-white/60 text-xs">
             Exchange fees change. We cite the fee schedule source with each result — check it before
             transacting. This table was verified at the time of our last code update; see{' '}
             <a href="/methodology" className="text-[#f7931a]/60 hover:text-[#f7931a] underline">Methodology</a>{' '}

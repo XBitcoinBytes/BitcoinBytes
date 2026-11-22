@@ -37,7 +37,7 @@ export default function Home() {
             for each exchange and rank by how much Bitcoin you actually receive
             after fees.
           </p>
-          <p className="text-xs text-white/30 max-w-lg mx-auto">
+          <p className="text-xs text-white/60 max-w-lg mx-auto">
             Assumes USD already funded via the platform's free/default method.
             Immediate market purchase. Withdrawal and network fees excluded.
             Standard US retail customer. Results are estimates, not guaranteed quotes.
@@ -58,7 +58,7 @@ export default function Home() {
             <div>
               <ShieldCheck className="w-6 h-6 text-[#f7931a] mx-auto mb-2" />
               <h3 className="text-sm font-semibold text-white mb-1">Verified fees only</h3>
-              <p className="text-xs text-white/40 leading-relaxed">
+              <p className="text-xs text-white/60 leading-relaxed">
                 We use only published entry-tier taker fees from official exchange fee schedules.
                 No estimates or invented values.
               </p>
@@ -66,7 +66,7 @@ export default function Home() {
             <div>
               <Bitcoin className="w-6 h-6 text-[#f7931a] mx-auto mb-2" />
               <h3 className="text-sm font-semibold text-white mb-1">Live order-book depth</h3>
-              <p className="text-xs text-white/40 leading-relaxed">
+              <p className="text-xs text-white/60 leading-relaxed">
                 Results simulate walking the ask side of each exchange's live order book for
                 your specific USD amount.
               </p>
@@ -74,7 +74,7 @@ export default function Home() {
             <div>
               <ExternalLink className="w-6 h-6 text-[#f7931a] mx-auto mb-2" />
               <h3 className="text-sm font-semibold text-white mb-1">Unranked is honest</h3>
-              <p className="text-xs text-white/40 leading-relaxed">
+              <p className="text-xs text-white/60 leading-relaxed">
                 Providers without a public price-and-fee API appear unranked with a plain
                 explanation. We never fill missing data with guesses.
               </p>
@@ -91,15 +91,15 @@ export default function Home() {
             <a href="/methodology" className="text-[#f7931a]/70 hover:text-[#f7931a] underline underline-offset-4 transition-colors">
               How we calculate results
             </a>
-            <span className="text-white/20 hidden sm:inline">·</span>
+            <span className="text-white/60 hidden sm:inline">·</span>
             <a href="/fees" className="text-[#f7931a]/70 hover:text-[#f7931a] underline underline-offset-4 transition-colors">
               Spreads &amp; fees explained
             </a>
-            <span className="text-white/20 hidden sm:inline">·</span>
+            <span className="text-white/60 hidden sm:inline">·</span>
             <a href="/beginners" className="text-[#f7931a]/70 hover:text-[#f7931a] underline underline-offset-4 transition-colors">
               New to Bitcoin?
             </a>
-            <span className="text-white/20 hidden sm:inline">·</span>
+            <span className="text-white/60 hidden sm:inline">·</span>
             <a href="/data-status" className="text-[#f7931a]/70 hover:text-[#f7931a] underline underline-offset-4 transition-colors">
               Data &amp; provider status
             </a>

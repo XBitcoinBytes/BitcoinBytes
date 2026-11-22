@@ -44,7 +44,7 @@ export function Header() {
             href="https://twitter.com/xbitcoinbytes"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-2 flex items-center gap-1 text-xs text-white/40 hover:text-white/70 border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
+            className="ml-2 flex items-center gap-1 text-xs text-white/60 hover:text-white/70 border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
             aria-label="@xbitcoinbytes on X (Twitter)"
           >
             @xbitcoinbytes <ExternalLink className="w-3 h-3" aria-hidden="true" />
@@ -89,7 +89,7 @@ export function Header() {
             href="https://twitter.com/xbitcoinbytes"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 px-3 py-2 text-sm text-white/40 hover:text-white/70 transition-colors"
+            className="flex items-center gap-1 px-3 py-2 text-sm text-white/60 hover:text-white/70 transition-colors"
           >
             @xbitcoinbytes <ExternalLink className="w-3 h-3" />
           </a>

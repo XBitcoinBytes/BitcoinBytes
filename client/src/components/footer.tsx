@@ -39,7 +39,7 @@ export function Footer() {
               <Bitcoin className="w-5 h-5 text-[#f7931a]" aria-hidden="true" />
               Bitcoin<span className="text-[#f7931a]">Bytes</span>
             </div>
-            <p className="text-xs leading-relaxed text-white/35 mb-4">
+            <p className="text-xs leading-relaxed text-white/60 mb-4">
               Transparent Bitcoin purchase price comparison. Live order books,
               verified fees, no fabricated data.
             </p>
@@ -47,7 +47,7 @@ export function Footer() {
               href="https://twitter.com/xbitcoinbytes"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-[#f7931a] transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-white/60 hover:text-[#f7931a] transition-colors"
               aria-label="@xbitcoinbytes on X (Twitter)"
             >
               @xbitcoinbytes <ExternalLink className="w-3 h-3" aria-hidden="true" />
@@ -65,7 +65,7 @@ export function Footer() {
                   <li key={href}>
                     <Link
                       href={href}
-                      className="text-xs text-white/40 hover:text-white/70 transition-colors"
+                      className="text-xs text-white/60 hover:text-white/70 transition-colors"
                     >
                       {label}
                     </Link>
@@ -76,7 +76,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-white/8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/25">
+        <div className="border-t border-white/8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/60">
           <p>© {new Date().getFullYear()} BitcoinBytes. Not financial advice.</p>
           <p className="text-center sm:text-right leading-relaxed max-w-md">
             Results are estimates based on live order books and published entry-tier taker fees.

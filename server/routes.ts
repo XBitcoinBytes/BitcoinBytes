@@ -426,42 +426,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // News routes - Updated to use live CryptoNews API with 5-minute updates
+  // Bitcoin headlines from publishers' RSS feeds (see liveNewsService). Empty list + status when unavailable.
   app.get("/api/news", async (req, res) => {
     try {
       const limit = Math.min(Math.max(parseInt(req.query.limit as string) || 15, 1), 50);
       const offset = Math.min(Math.max(parseInt(req.query.offset as string) || 0, 0), 200);
-      
-      console.log(`📰 News API called with limit=${limit}, offset=${offset}`);
-      
-      // Use the imported live news service instance directly
-      const freshNews = await liveNewsService.getLatestNews(limit + offset);
-      console.log(`📰 Live news service returned ${freshNews.length} articles`);
-      
-      // Apply offset manually since live service doesn't support it directly
-      const paginatedNews = freshNews.slice(offset, offset + limit);
-      
-      // Transform to expected format for frontend compatibility
-      const transformedNews = paginatedNews.map((article, index) => ({
-        id: Date.now() + index, // Generate ID based on timestamp
-        title: article.title,
-        summary: article.summary,
-        content: article.content,
-        url: article.url,
-        source: article.source,
-        author: article.author,
-        publishedAt: typeof article.publishedAt === 'string' ? new Date(article.publishedAt) : article.publishedAt,
-        impact: article.impact,
-        tags: article.tags,
-        views: article.views,
-        shares: article.shares,
-        isActive: article.isActive
-      }));
-      
-      console.log(`📰 Served ${transformedNews.length} live news articles`);
-      res.json(transformedNews);
+      const articles = await liveNewsService.getLatestNews(limit + offset);
+      const status = liveNewsService.getCacheStatus();
+      res.set("Cache-Control", "public, max-age=300");
+      res.json({
+        available: articles.length > 0,
+        updatedAt: status.lastSuccess ? new Date(status.lastSuccess).toISOString() : null,
+        failedSources: status.failedSources,
+        articles: articles.slice(offset, offset + limit).map((a) => ({
+          title: a.title, summary: a.summary, url: a.url, source: a.source, publishedAt: a.publishedAt,
+        })),
+      });
     } catch (error) {
-      console.error('Live news API error:', error);
-      res.status(500).json({ message: "Failed to fetch live news" });
+      console.error("News API error:", error);
+      res.status(503).json({ available: false, updatedAt: null, articles: [] });
     }
   });
 
@@ -503,19 +486,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('News status error:', error);
       res.status(500).json({ message: "Failed to get news status" });
-    }
-  });
-
-  app.get("/api/news/impact/:impact", async (req, res) => {
-    try {
-      const impact = req.params.impact.toUpperCase();
-      if (!["HIGH", "MEDIUM", "LOW"].includes(impact)) {
-        return res.status(400).json({ message: "Invalid impact level" });
-      }
-      const news = await storage.getNewsByImpact(impact);
-      res.json(news);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch news by impact" });
     }
   });
 
@@ -714,6 +684,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   
   // Initialize enhanced WebSocket server for real-time updates
+  // Warm the headline cache without blocking startup.
+  liveNewsService.forceRefresh().catch(() => {});
+
   // The current client does not use the WebSocket feed; keep it off unless explicitly enabled
   // (it polls upstream exchanges every 10s even with no listeners).
   if (process.env.ENABLE_WEBSOCKET === "true") {

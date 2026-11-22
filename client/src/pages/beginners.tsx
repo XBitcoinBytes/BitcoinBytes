@@ -27,7 +27,7 @@ export default function Beginners() {
       <Header />
       <main id="main-content" className="relative z-10 max-w-3xl mx-auto px-4 pt-24 pb-16">
         <h1 className="text-3xl font-bold text-white mb-2">New to Bitcoin?</h1>
-        <p className="text-white/40 text-sm mb-10">
+        <p className="text-white/60 text-sm mb-10">
           A plain-language guide for first-time buyers in the United States.
           Not financial advice — do your own research before purchasing.
         </p>
@@ -159,7 +159,7 @@ export default function Beginners() {
         </Section>
 
         <Section id="further-reading" title="Further reading">
-          <p className="text-white/40 text-xs mb-3">
+          <p className="text-white/60 text-xs mb-3">
             These are third-party resources. BitcoinBytes has no affiliation with any of them.
           </p>
           <ul className="space-y-2">

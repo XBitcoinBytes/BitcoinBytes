@@ -26,7 +26,7 @@ export default function Methodology() {
       <Header />
       <main id="main-content" className="relative z-10 max-w-3xl mx-auto px-4 pt-24 pb-16">
         <h1 className="text-3xl font-bold text-white mb-2">Methodology</h1>
-        <p className="text-white/40 text-sm mb-10">
+        <p className="text-white/60 text-sm mb-10">
           How we calculate estimated Bitcoin purchase costs — and what we cannot calculate.
         </p>
 
@@ -100,9 +100,9 @@ effective_rate = usd_amount / btc_received`}
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                <tr><td className="px-3 py-2 text-white/80">Kraken</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.26%</td><td className="px-3 py-2 text-white/40">kraken.com/en-us/features/fee-schedule</td></tr>
-                <tr><td className="px-3 py-2 text-white/80">Crypto.com Exchange</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.075%</td><td className="px-3 py-2 text-white/40">crypto.com/exchange/document/fees-limits</td></tr>
-                <tr><td className="px-3 py-2 text-white/80">Binance.US</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.60%</td><td className="px-3 py-2 text-white/40">binance.us/fees</td></tr>
+                <tr><td className="px-3 py-2 text-white/80">Kraken</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.26%</td><td className="px-3 py-2 text-white/60">kraken.com/en-us/features/fee-schedule</td></tr>
+                <tr><td className="px-3 py-2 text-white/80">Crypto.com Exchange</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.075%</td><td className="px-3 py-2 text-white/60">crypto.com/exchange/document/fees-limits</td></tr>
+                <tr><td className="px-3 py-2 text-white/80">Binance.US</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.60%</td><td className="px-3 py-2 text-white/60">binance.us/fees</td></tr>
               </tbody>
             </table>
           </div>

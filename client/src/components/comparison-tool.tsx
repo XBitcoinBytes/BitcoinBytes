@@ -103,11 +103,11 @@ function RankedCard({ result, rank, isWinner }: { result: RankedResult; rank: nu
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs text-white/40 font-mono">#{rank}</span>
+              <span className="text-xs text-white/60 font-mono">#{rank}</span>
               <h3 className="text-white font-semibold text-lg">{result.providerName}</h3>
               <StatePill state={result.state} />
             </div>
-            <div className="text-xs text-white/40">
+            <div className="text-xs text-white/60">
               Data fetched {formatAge(result.dataAgeMs)} · {result.levelsConsumed} order book level{result.levelsConsumed !== 1 ? 's' : ''} consumed
             </div>
           </div>
@@ -124,34 +124,34 @@ function RankedCard({ result, rank, isWinner }: { result: RankedResult; rank: nu
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="bg-black/20 rounded-lg p-3">
-            <div className="text-xs text-white/40 mb-1">BTC Received</div>
+            <div className="text-xs text-white/60 mb-1">BTC Received</div>
             <div className={`font-mono font-bold ${isWinner ? 'text-[#f7931a]' : 'text-white'} text-sm sm:text-base leading-tight`}>
               {formatBtc(result.btcReceived)}
             </div>
-            <div className="text-xs text-white/30 mt-0.5">BTC</div>
+            <div className="text-xs text-white/60 mt-0.5">BTC</div>
           </div>
           <div className="bg-black/20 rounded-lg p-3">
-            <div className="text-xs text-white/40 mb-1">Effective Rate</div>
+            <div className="text-xs text-white/60 mb-1">Effective Rate</div>
             <div className="font-mono text-white text-sm leading-tight">{formatUsd(result.effectivePricePerBtc)}</div>
-            <div className="text-xs text-white/30 mt-0.5">per BTC all-in</div>
+            <div className="text-xs text-white/60 mt-0.5">per BTC all-in</div>
           </div>
           <div className="bg-black/20 rounded-lg p-3">
-            <div className="text-xs text-white/40 mb-1">Fee Paid</div>
+            <div className="text-xs text-white/60 mb-1">Fee Paid</div>
             <div className="font-mono text-white text-sm leading-tight">{formatUsd(result.feeUsd)}</div>
-            <div className="text-xs text-white/30 mt-0.5">{result.feePercent.toFixed(2)}% taker</div>
+            <div className="text-xs text-white/60 mt-0.5">{result.feePercent.toFixed(2)}% taker</div>
           </div>
           <div className="bg-black/20 rounded-lg p-3">
-            <div className="text-xs text-white/40 mb-1">Best Ask</div>
+            <div className="text-xs text-white/60 mb-1">Best Ask</div>
             <div className="font-mono text-white text-sm leading-tight">{formatUsd(result.bestAsk)}</div>
-            <div className="text-xs text-white/30 mt-0.5">mid-market ref</div>
+            <div className="text-xs text-white/60 mt-0.5">mid-market ref</div>
           </div>
         </div>
 
         <details className="mt-3">
-          <summary className="text-xs text-white/30 cursor-pointer hover:text-white/50 select-none">
+          <summary className="text-xs text-white/60 cursor-pointer hover:text-white/50 select-none">
             Data sources & methodology
           </summary>
-          <div className="mt-2 text-xs text-white/40 space-y-1">
+          <div className="mt-2 text-xs text-white/60 space-y-1">
             <p><span className="text-white/60">Order book:</span> {result.orderBookSource}</p>
             <p><span className="text-white/60">Fee rate:</span> {result.feeRateSource}</p>
           </div>
@@ -170,9 +170,9 @@ function UnrankedCard({ result }: { result: UnrankedResult }) {
             <h3 className="text-white/70 font-medium text-sm">{result.providerName}</h3>
             <StatePill state={result.state} />
           </div>
-          <p className="text-xs text-white/40 mb-2 leading-relaxed">{result.reason}</p>
+          <p className="text-xs text-white/60 mb-2 leading-relaxed">{result.reason}</p>
           {result.partialData?.publishedFeeNote && (
-            <p className="text-xs text-white/30 italic">
+            <p className="text-xs text-white/60 italic">
               {result.partialData.publishedFeeNote}
               {result.partialData.feeUrl && (
                 <> · <a href={result.partialData.feeUrl} target="_blank" rel="noopener noreferrer" className="text-[#f7931a]/60 hover:text-[#f7931a] underline">fee details</a></>
@@ -180,9 +180,9 @@ function UnrankedCard({ result }: { result: UnrankedResult }) {
             </p>
           )}
           {result.partialData?.indicativeAsk && (
-            <p className="text-xs text-white/40 mt-1">
+            <p className="text-xs text-white/60 mt-1">
               Indicative ask: <span className="font-mono text-white/60">{formatUsd(result.partialData.indicativeAsk)}</span>
-              <span className="ml-1 text-white/30">(fee unknown — not ranked)</span>
+              <span className="ml-1 text-white/60">(fee unknown — not ranked)</span>
             </p>
           )}
         </div>
@@ -190,7 +190,7 @@ function UnrankedCard({ result }: { result: UnrankedResult }) {
           href={result.providerUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-shrink-0 text-xs text-white/30 hover:text-white/60 border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors flex items-center gap-1"
+          className="flex-shrink-0 text-xs text-white/60 hover:text-white/60 border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors flex items-center gap-1"
           aria-label={`Visit ${result.providerName}`}
         >
           Visit <ExternalLink className="w-3 h-3" />
@@ -249,7 +249,7 @@ export function ComparisonTool() {
 
         <form onSubmit={handleSubmit} className="flex gap-3 mb-4">
           <div className="relative flex-1">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40 font-semibold select-none">$</span>
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/60 font-semibold select-none">$</span>
             <input
               type="number"
               inputMode="decimal"
@@ -291,7 +291,7 @@ export function ComparisonTool() {
 
       {/* Results */}
       {isFetching && (
-        <div className="flex items-center justify-center gap-3 py-16 text-white/40">
+        <div className="flex items-center justify-center gap-3 py-16 text-white/60">
           <RefreshCw className="w-5 h-5 animate-spin" />
           <span>Fetching live order books…</span>
         </div>
@@ -327,12 +327,12 @@ export function ComparisonTool() {
                 <span className="ml-2 text-xs text-yellow-400/80">· some data may be stale</span>
               )}
             </div>
-            <div className="flex items-center gap-2 text-xs text-white/30">
+            <div className="flex items-center gap-2 text-xs text-white/60">
               <Clock className="w-3 h-3" />
               {new Date(data.generatedAt).toLocaleTimeString()}
               <button
                 onClick={() => refetch()}
-                className="ml-1 text-white/40 hover:text-white/70 transition-colors"
+                className="ml-1 text-white/60 hover:text-white/70 transition-colors"
                 aria-label="Refresh results"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
@@ -377,11 +377,11 @@ export function ComparisonTool() {
           {/* Unranked providers */}
           {data.unranked.length > 0 && (
             <div className="space-y-3 mb-6">
-              <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-white/60 uppercase tracking-wider flex items-center gap-2">
                 <Info className="w-4 h-4" />
                 Other providers — not ranked
               </h3>
-              <p className="text-xs text-white/30 mb-3">
+              <p className="text-xs text-white/60 mb-3">
                 These providers could not supply verified amount-specific price and fee data.
                 No values are fabricated. Visit each provider directly for a real quote.
               </p>
@@ -392,7 +392,7 @@ export function ComparisonTool() {
           )}
 
           {/* Disclaimer */}
-          <div className="rounded-xl border border-white/6 bg-white/2 p-4 text-xs text-white/30 leading-relaxed">
+          <div className="rounded-xl border border-white/6 bg-white/2 p-4 text-xs text-white/60 leading-relaxed">
             <span className="text-white/50 font-medium">Estimates only. </span>
             {data.disclaimer}
             {' '}

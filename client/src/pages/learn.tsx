@@ -2,6 +2,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import InteractiveBitcoinConcepts from '@/components/interactive-bitcoin-concepts';
+import NewsHeadlines from '@/components/news-headlines';
 import { GLOSSARY, RESOURCES } from '@/content/learn';
 import { ExternalLink } from 'lucide-react';
 
@@ -41,6 +42,12 @@ export default function Learn() {
               </div>
             ))}
           </dl>
+        </section>
+
+        <section aria-labelledby="news-heading" className="mb-14">
+          <h2 id="news-heading" className="text-xl font-bold text-white mb-1">Latest Bitcoin headlines</h2>
+          <p className="text-white/60 text-sm mb-4">From the publishers’ public feeds, linking to the original articles. Headlines are not endorsements.</p>
+          <NewsHeadlines />
         </section>
 
         <section aria-labelledby="resources-heading">

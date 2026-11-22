@@ -26,7 +26,7 @@ export default function Legal() {
       <Header />
       <main id="main-content" className="relative z-10 max-w-3xl mx-auto px-4 pt-24 pb-16">
         <h1 className="text-3xl font-bold text-white mb-2">Disclosures, Terms &amp; Privacy</h1>
-        <p className="text-white/40 text-sm mb-10">
+        <p className="text-white/60 text-sm mb-10">
           Last updated: August 2026. This page governs your use of BitcoinBytes.
         </p>
 
