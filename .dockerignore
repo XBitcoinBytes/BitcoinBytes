@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.env
+.env.*
+attached_assets
+*.md
+!README.md
+__pycache__
+.replit
+replit.nix

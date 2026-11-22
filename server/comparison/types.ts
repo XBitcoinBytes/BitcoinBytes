@@ -104,7 +104,7 @@ export interface ComparisonResponse {
 }
 
 export const MIN_RANKED_FOR_WINNER = 3;
-export const STALE_TTL_MS = 90_000;          // 90 s before data is considered stale
+export const STALE_TTL_MS = 45_000;          // Cache public order books for at most 45 seconds
 export const PROVIDER_TIMEOUT_MS = 8_000;    // 8 s per provider request
 export const ENGINE_VERSION = '1.0.0';
 

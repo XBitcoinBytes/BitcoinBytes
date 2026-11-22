@@ -37,7 +37,7 @@ import { robinhoodAdapter } from './providers/robinhood.js';
 import { swanAdapter } from './providers/swan.js';
 
 /** Hard cutoff: stale data older than this is excluded from ranking entirely */
-const STALE_HARD_CUTOFF_MS = STALE_TTL_MS * 4; // 6 minutes
+const STALE_HARD_CUTOFF_MS = STALE_TTL_MS; // Never rank expired quotes
 
 /** Ordered list of all adapters – ranked-capable first, then informational */
 const ADAPTERS: ProviderAdapter[] = [

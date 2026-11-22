@@ -1,24 +1,36 @@
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { PriceComparison } from "@shared/schema";
 
+export function usePriceClock() {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  return now;
+}
+
 export function useBitcoinPrice() {
-  return useQuery<PriceComparison>({
+  const now = usePriceClock();
+  const query = useQuery<PriceComparison>({
     queryKey: ["/api/prices/comparison"],
-    refetchInterval: 120000, // Reduced to 2 minutes to prevent rate limiting
-    staleTime: 90000, // Consider data stale after 90 seconds
+    refetchInterval: 30000,
+    staleTime: 0,
     gcTime: 600000, // Keep in cache for 10 minutes
-    retry: 3,
+    retry: false,
     retryDelay: 1000,
   });
+  return { ...query, data: query.isError || (query.data && now - Math.min(...query.data.exchanges.map(e => new Date(e.currentPrice.timestamp).getTime())) > 45000) ? undefined : query.data };
 }
 
 export function useCurrentPrices() {
   return useQuery({
     queryKey: ["/api/prices/current"],
-    refetchInterval: 120000, // Reduced to 2 minutes
-    staleTime: 90000,
+    refetchInterval: 30000,
+    staleTime: 0,
     gcTime: 600000,
-    retry: 3,
+    retry: false,
     retryDelay: 1000,
   });
 }

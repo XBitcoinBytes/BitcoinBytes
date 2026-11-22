@@ -26,8 +26,8 @@ export async function handleCompare(req: Request, res: Response): Promise<void> 
   try {
     const result = await runComparison(usdAmount);
     // Cache for 30 s – fresh enough for this use case, reduces API load
-    res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
-    res.json(result);
+    res.set('Cache-Control', 'no-store');
+    res.status(result.ranked.length ? 200 : 503).json({ ...result, available: result.ranked.length > 0 });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('[compare] Engine error:', message);
