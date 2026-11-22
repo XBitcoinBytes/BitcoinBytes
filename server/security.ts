@@ -72,7 +72,7 @@ export const securityConfig = helmet({
       // React inline style attributes and Radix positioning need inline styles.
       styleSrc: ["'self'", "'unsafe-inline'"],
       fontSrc: ["'self'", "data:"],
-      imgSrc: ["'self'", "data:", "blob:"],
+      imgSrc: ["'self'", "data:", "blob:", "https://i.ytimg.com"],
       connectSrc: ["'self'"],
       mediaSrc: ["'self'"],
       objectSrc: ["'none'"],

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+ <link rel="self" href="http://www.youtube.com/feeds/videos.xml?channel_id=UC8Ewji3JwVCCyN0mjNKWMxw"/>
+ <id>yt:channel:8Ewji3JwVCCyN0mjNKWMxw</id>
+ <yt:channelId>8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+ <title>BitcoinBytes</title>
+ <link rel="alternate" href="https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw"/>
+ <author>
+  <name>BitcoinBytes</name>
+  <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+ </author>
+ <published>2011-08-24T17:41:36+00:00</published>
+ <entry>
+  <id>yt:video:-zrb6E71qSM</id>
+  <yt:videoId>-zrb6E71qSM</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Bitcoin Group Meeting 5</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=-zrb6E71qSM"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2026-10-31T15:49:20+00:00</published>
+  <updated>2026-11-01T16:02:43+00:00</updated>
+  <media:group>
+   <media:title>Bitcoin Group Meeting 5</media:title>
+   <media:content url="https://www.youtube.com/v/-zrb6E71qSM?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i2.ytimg.com/vi/-zrb6E71qSM/hqdefault.jpg" width="480" height="360"/>
+   <media:description>Self-Custody and Why it Matters</media:description>
+   <media:community>
+    <media:starRating count="0" average="0.00" min="1" max="5"/>
+    <media:statistics views="0"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:pFpELui6shg</id>
+  <yt:videoId>pFpELui6shg</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Bitcoin Group Meeting 4</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=pFpELui6shg"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2026-10-31T04:29:56+00:00</published>
+  <updated>2026-11-03T04:11:37+00:00</updated>
+  <media:group>
+   <media:title>Bitcoin Group Meeting 4</media:title>
+   <media:content url="https://www.youtube.com/v/pFpELui6shg?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i1.ytimg.com/vi/pFpELui6shg/hqdefault.jpg" width="480" height="360"/>
+   <media:description>How Bitcoin Works Under the Hood for Beginners</media:description>
+   <media:community>
+    <media:starRating count="0" average="0.00" min="1" max="5"/>
+    <media:statistics views="2"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:mlyPSZn7VL8</id>
+  <yt:videoId>mlyPSZn7VL8</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Bitcoin Group Meeting 3</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=mlyPSZn7VL8"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2026-10-31T04:21:13+00:00</published>
+  <updated>2026-11-03T04:07:16+00:00</updated>
+  <media:group>
+   <media:title>Bitcoin Group Meeting 3</media:title>
+   <media:content url="https://www.youtube.com/v/mlyPSZn7VL8?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i2.ytimg.com/vi/mlyPSZn7VL8/hqdefault.jpg" width="480" height="360"/>
+   <media:description>The Birth of Bitcoin - What Problems was Satoshi trying to solve?</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="10"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:vDkgHxzrzXw</id>
+  <yt:videoId>vDkgHxzrzXw</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Bitcoin Group Meeting 2</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=vDkgHxzrzXw"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2026-10-31T03:18:04+00:00</published>
+  <updated>2026-10-31T03:27:45+00:00</updated>
+  <media:group>
+   <media:title>Bitcoin Group Meeting 2</media:title>
+   <media:content url="https://www.youtube.com/v/vDkgHxzrzXw?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/vDkgHxzrzXw/hqdefault.jpg" width="480" height="360"/>
+   <media:description>The History of Money</media:description>
+   <media:community>
+    <media:starRating count="0" average="0.00" min="1" max="5"/>
+    <media:statistics views="4"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:ZHiGPr2Pj84</id>
+  <yt:videoId>ZHiGPr2Pj84</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 21 - The Sound Money and Individual Freedom Podcast - &quot;The Blocksize War&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ZHiGPr2Pj84"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-09-09T14:50:47+00:00</published>
+  <updated>2026-11-20T08:23:07+00:00</updated>
+  <media:group>
+   <media:title>Episode 21 - The Sound Money and Individual Freedom Podcast - &quot;The Blocksize War&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/ZHiGPr2Pj84?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/ZHiGPr2Pj84/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;The Blocksize War&quot; by Jonathan Bier.  Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="16"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:6mLZ_zJIRYk</id>
+  <yt:videoId>6mLZ_zJIRYk</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 20 - The Sound Money and Individual Freedom Podcast - &quot;Mastering the Lightning Network&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=6mLZ_zJIRYk"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-09-08T14:35:52+00:00</published>
+  <updated>2026-11-21T07:26:15+00:00</updated>
+  <media:group>
+   <media:title>Episode 20 - The Sound Money and Individual Freedom Podcast - &quot;Mastering the Lightning Network&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/6mLZ_zJIRYk?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i3.ytimg.com/vi/6mLZ_zJIRYk/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;Mastering the Lightning Network&quot; by Andreas M. Antonopoulos.  Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="16"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:4hhJoU47Yt0</id>
+  <yt:videoId>4hhJoU47Yt0</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 19 - The Sound Money and Individual Freedom Podcast Episode 19 - &quot;Fiat Ruins Everything&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=4hhJoU47Yt0"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-09-02T22:28:58+00:00</published>
+  <updated>2026-11-20T01:57:16+00:00</updated>
+  <media:group>
+   <media:title>Episode 19 - The Sound Money and Individual Freedom Podcast Episode 19 - &quot;Fiat Ruins Everything&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/4hhJoU47Yt0?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i1.ytimg.com/vi/4hhJoU47Yt0/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;Fiat Ruins Everything&quot; by Jimmy Song.  Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="12"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:pw-wq_zZbC0</id>
+  <yt:videoId>pw-wq_zZbC0</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 18 - The Sound Money and Individual Freedom Podcast - &quot;Hard Money You Can't F*ck With&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=pw-wq_zZbC0"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-08-12T00:48:11+00:00</published>
+  <updated>2026-11-19T15:07:05+00:00</updated>
+  <media:group>
+   <media:title>Episode 18 - The Sound Money and Individual Freedom Podcast - &quot;Hard Money You Can't F*ck With&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/pw-wq_zZbC0?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i1.ytimg.com/vi/pw-wq_zZbC0/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;Bitcoin: Hard Money You Can't F*ck With: Why bitcoin will be the next global reserve currency&quot; Jason A. Williams.  Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="0" average="0.00" min="1" max="5"/>
+    <media:statistics views="23"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:hyIjvdGYNEo</id>
+  <yt:videoId>hyIjvdGYNEo</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 17 - The Sound Money and Individual Freedom Podcast - &quot;Hijacking Bitcoin&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=hyIjvdGYNEo"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-08-03T23:55:51+00:00</published>
+  <updated>2026-10-04T21:25:18+00:00</updated>
+  <media:group>
+   <media:title>Episode 17 - The Sound Money and Individual Freedom Podcast - &quot;Hijacking Bitcoin&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/hyIjvdGYNEo?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i1.ytimg.com/vi/hyIjvdGYNEo/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;Hijacking Bitcoin&quot; by Roger Ver and Steve Patterson.  Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="19"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:WIMtTfbt9GM</id>
+  <yt:videoId>WIMtTfbt9GM</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 16 - The Sound Money and Individual Freedom Podcast - &quot;Blockchain Revolution&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=WIMtTfbt9GM"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-08-03T04:57:46+00:00</published>
+  <updated>2026-11-18T23:42:21+00:00</updated>
+  <media:group>
+   <media:title>Episode 16 - The Sound Money and Individual Freedom Podcast - &quot;Blockchain Revolution&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/WIMtTfbt9GM?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i4.ytimg.com/vi/WIMtTfbt9GM/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;Blockchain Revolution&quot; by Alex Tapscott and Don Tapscott.  Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="20"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:xwMvHVfykms</id>
+  <yt:videoId>xwMvHVfykms</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 15 - The Sound Money and Individual Freedom Podcast - &quot;Everything Divided by 21 Million&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=xwMvHVfykms"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-08-02T20:39:35+00:00</published>
+  <updated>2026-10-04T09:01:04+00:00</updated>
+  <media:group>
+   <media:title>Episode 15 - The Sound Money and Individual Freedom Podcast - &quot;Everything Divided by 21 Million&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/xwMvHVfykms?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i1.ytimg.com/vi/xwMvHVfykms/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;Everything Divided by 21 Million&quot; by Knut Svanholm. Rewiring Reality  How Bitcoin Divides Everything by 21 Million and Redefines Truth, Time, and Wealth.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="32"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:0J8HM69wXJY</id>
+  <yt:videoId>0J8HM69wXJY</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 13 - The Sound Money and Individual Freedom Podcast - &quot;Resistance Money&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=0J8HM69wXJY"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-08-02T01:55:19+00:00</published>
+  <updated>2026-10-04T14:16:36+00:00</updated>
+  <media:group>
+   <media:title>Episode 13 - The Sound Money and Individual Freedom Podcast - &quot;Resistance Money&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/0J8HM69wXJY?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i1.ytimg.com/vi/0J8HM69wXJY/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we examine &quot;Resistance Money&quot; by Andrew M. Bailey, Bradley Rettler, and Craig Warmke. Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="2" average="5.00" min="1" max="5"/>
+    <media:statistics views="27"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:00SG-dICGY0</id>
+  <yt:videoId>00SG-dICGY0</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 14 - The Sound Money and Individual Freedom Podcast - &quot;Softwar&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=00SG-dICGY0"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-07-31T02:17:00+00:00</published>
+  <updated>2026-11-20T06:46:10+00:00</updated>
+  <media:group>
+   <media:title>Episode 14 - The Sound Money and Individual Freedom Podcast - &quot;Softwar&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/00SG-dICGY0?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i1.ytimg.com/vi/00SG-dICGY0/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;Softwar&quot; by Jason P. Lowery. Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="18"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:CNPwAWf9I-k</id>
+  <yt:videoId>CNPwAWf9I-k</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 12 - The Sound Money and Individual Freedom Podcast - &quot;The Bitcoin Age&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=CNPwAWf9I-k"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-07-30T23:17:33+00:00</published>
+  <updated>2026-10-01T19:12:29+00:00</updated>
+  <media:group>
+   <media:title>Episode 12 - The Sound Money and Individual Freedom Podcast - &quot;The Bitcoin Age&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/CNPwAWf9I-k?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i4.ytimg.com/vi/CNPwAWf9I-k/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;The Bitcoin Age&quot; by Nik Bhatia. Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="18"/>
+   </media:community>
+  </media:group>
+ </entry>
+ <entry>
+  <id>yt:video:X-UnX7fJPt0</id>
+  <yt:videoId>X-UnX7fJPt0</yt:videoId>
+  <yt:channelId>UC8Ewji3JwVCCyN0mjNKWMxw</yt:channelId>
+  <title>Episode 11 - The Sound Money and Individual Freedom Podcast - &quot;Economics in One Lesson&quot;</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=X-UnX7fJPt0"/>
+  <author>
+   <name>BitcoinBytes</name>
+   <uri>https://www.youtube.com/channel/UC8Ewji3JwVCCyN0mjNKWMxw</uri>
+  </author>
+  <published>2025-07-29T01:30:49+00:00</published>
+  <updated>2026-10-01T12:03:01+00:00</updated>
+  <media:group>
+   <media:title>Episode 11 - The Sound Money and Individual Freedom Podcast - &quot;Economics in One Lesson&quot;</media:title>
+   <media:content url="https://www.youtube.com/v/X-UnX7fJPt0?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+   <media:thumbnail url="https://i1.ytimg.com/vi/X-UnX7fJPt0/hqdefault.jpg" width="480" height="360"/>
+   <media:description>In this episode we discuss &quot;Economics in One Lesson&quot; by Henry Hazlitt. Please visit BitcoinBytes.org for more content.</media:description>
+   <media:community>
+    <media:starRating count="1" average="5.00" min="1" max="5"/>
+    <media:statistics views="7"/>
+   </media:community>
+  </media:group>
+ </entry>
+</feed>

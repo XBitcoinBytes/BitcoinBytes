@@ -638,11 +638,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/youtube/recent-videos", async (req, res) => {
     try {
-      const videos = await youtubeService.getRecentVideos();
-      res.json(videos);
+      const feed = await youtubeService.getFeed();
+      res.setHeader('Cache-Control', 'public, max-age=900');
+      res.json(feed);
     } catch (error) {
       console.error('YouTube service error:', error);
-      res.status(500).json({ message: "Failed to fetch YouTube videos" });
+      res.status(200).json({ available: false, channelUrl: "https://www.youtube.com/@MyBitcoinBytes", updatedAt: null, videos: [] });
     }
   });
 
