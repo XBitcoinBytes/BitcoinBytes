@@ -5,7 +5,6 @@ import { storage } from "./storage";
 import { insertBitcoinPriceSchema, insertNewsArticleSchema, insertHistoricalPriceSchema, insertNewsletterSubscriptionSchema } from "@shared/schema";
 import { z } from "zod";
 import { coinGeckoService } from "./coingecko";
-import { newsService } from "./newsService";
 import { newsletterService } from "./newsletter";
 import { responseCache } from "./responseCache";
 import { healthMonitor } from "./healthMonitor";
@@ -17,8 +16,8 @@ import { bitcoinLogger, requestLogger, errorLogger } from "./logger";
 import { systemMonitor, monitoringMiddleware, healthCheckHandler, detailedMetricsHandler } from "./monitoring";
 import { infrastructureOptimizer } from "./infrastructureOptimizer";
 import { priceCache, marketDataCache, newsCache, chartCache } from "./middleware/cacheMiddleware";
-import { emergencyPriceFix } from "./emergencyPriceFix.js";
 import { websocketServer } from "./websocket/websocketServer";
+import { requireAdmin } from "./security";
 import { liveNewsService } from "./liveNewsService";
 import { youtubeService } from "./youtubeService";
 import compression from "compression";
@@ -282,7 +281,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/prices/historical", async (req, res) => {
+  app.post("/api/prices/historical", requireAdmin, async (req, res) => {
     try {
       const validatedData = insertHistoricalPriceSchema.parse(req.body);
       const price = await storage.addHistoricalPrice(validatedData);
@@ -429,8 +428,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // News routes - Updated to use live CryptoNews API with 5-minute updates
   app.get("/api/news", async (req, res) => {
     try {
-      const limit = parseInt(req.query.limit as string) || 15;
-      const offset = parseInt(req.query.offset as string) || 0;
+      const limit = Math.min(Math.max(parseInt(req.query.limit as string) || 15, 1), 50);
+      const offset = Math.min(Math.max(parseInt(req.query.offset as string) || 0, 0), 200);
       
       console.log(`📰 News API called with limit=${limit}, offset=${offset}`);
       
@@ -467,7 +466,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Force refresh news cache endpoint
-  app.post("/api/news/refresh", async (req, res) => {
+  app.post("/api/news/refresh", requireAdmin, async (req, res) => {
     try {
       console.log('🔄 Force refreshing news cache via API request');
       const freshNews = await liveNewsService.forceRefresh();
@@ -485,8 +484,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('News refresh error:', error);
       res.status(500).json({ 
         success: false,
-        message: "Failed to refresh news cache",
-        error: error.message 
+        message: "Failed to refresh news cache"
       });
     }
   });
@@ -521,7 +519,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/news", async (req, res) => {
+  app.post("/api/news", requireAdmin, async (req, res) => {
     try {
       const validatedData = insertNewsArticleSchema.parse(req.body);
       const article = await storage.createNewsArticle(validatedData);
@@ -537,6 +535,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/news/:id/view", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (!Number.isSafeInteger(id) || id <= 0) return res.status(400).json({ message: "Invalid id" });
       await storage.incrementNewsViews(id);
       res.json({ message: "View count incremented" });
     } catch (error) {
@@ -547,6 +546,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/news/:id/share", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (!Number.isSafeInteger(id) || id <= 0) return res.status(400).json({ message: "Invalid id" });
       await storage.incrementNewsShares(id);
       res.json({ message: "Share count incremented" });
     } catch (error) {
@@ -676,108 +676,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Newsletter subscription route
-  app.post("/api/newsletter/subscribe", async (req, res) => {
-    try {
-      const result = insertNewsletterSubscriptionSchema.parse(req.body);
-      const subscription = await storage.subscribeToNewsletter(result.email);
-      
-      // Send welcome email if SendGrid is configured
-      try {
-        const { newsletterService } = await import('./newsletter');
-        const emailSent = await newsletterService.sendWelcomeEmail(result.email);
-        if (emailSent) {
-          res.json({ 
-            message: "Successfully subscribed! Welcome email sent.", 
-            subscription,
-            emailSent: true
-          });
-        } else {
-          res.json({ 
-            message: "Successfully subscribed! (Email service unavailable)", 
-            subscription,
-            emailSent: false
-          });
-        }
-      } catch (emailError) {
-        console.warn('Email service error:', emailError);
-        res.json({ 
-          message: "Successfully subscribed! (Email service unavailable)", 
-          subscription,
-          emailSent: false
-        });
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid email format" });
-      } else if (error instanceof Error && error.message === "Email is already subscribed") {
-        res.status(409).json({ message: "Email is already subscribed" });
-      } else {
-        res.status(500).json({ message: "Failed to subscribe" });
-      }
-    }
-  });
-
-  // Price alerts endpoint
-  app.post("/api/price-alerts", async (req, res) => {
-    try {
-      const { targetPrice, type, email, exchangeName } = req.body;
-      
-      // Validate required fields
-      if (!targetPrice || !type || !email || !exchangeName) {
-        return res.status(400).json({ 
-          message: "Missing required fields: targetPrice, type, email, exchangeName" 
-        });
-      }
-      
-      // Validate email format
-      if (!email.includes("@")) {
-        return res.status(400).json({ message: "Invalid email format" });
-      }
-      
-      // Validate alert type
-      if (!["above", "below"].includes(type)) {
-        return res.status(400).json({ message: "Invalid alert type. Must be 'above' or 'below'" });
-      }
-      
-      // Validate target price
-      const price = parseFloat(targetPrice);
-      if (isNaN(price) || price <= 0) {
-        return res.status(400).json({ message: "Invalid target price" });
-      }
-      
-      // Store alert (for now, just return success)
-      // In production, this would save to database and set up monitoring
-      const alert = {
-        id: Date.now(),
-        targetPrice: price,
-        type,
-        email,
-        exchangeName,
-        isActive: true,
-        createdAt: new Date()
-      };
-      
-      // Send confirmation email if service is configured
-      try {
-        const emailSent = await newsletterService.sendPriceAlert(email, price, price);
-        res.json({ 
-          message: "Price alert created successfully",
-          alert,
-          emailSent
-        });
-      } catch (emailError) {
-        console.warn('Price alert email error:', emailError);
-        res.json({ 
-          message: "Price alert created successfully (email notification unavailable)",
-          alert,
-          emailSent: false
-        });
-      }
-    } catch (error) {
-      console.error('Price alert creation error:', error);
-      res.status(500).json({ message: "Failed to create price alert" });
-    }
+  // Newsletter signup and price alerts were never persisted (in-memory only) and could be
+  // used to make this server email arbitrary addresses. Disabled until they are rebuilt
+  // with storage, double opt-in and abuse protection.
+  app.post(["/api/newsletter/subscribe", "/api/price-alerts"], (_req, res) => {
+    res.status(410).json({ message: "This feature is not available" });
   });
 
   // Health monitoring endpoints
@@ -811,7 +714,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   
   // Initialize enhanced WebSocket server for real-time updates
-  websocketServer.initialize(httpServer);
+  // The current client does not use the WebSocket feed; keep it off unless explicitly enabled
+  // (it polls upstream exchanges every 10s even with no listeners).
+  if (process.env.ENABLE_WEBSOCKET === "true") {
+    websocketServer.initialize(httpServer);
+  }
   
   return httpServer;
 }

@@ -2,12 +2,14 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic, log } from "./static";
 import { enhancedRateLimiter } from "./rateLimiter";
+import { httpsRedirect } from "./security";
 
 const app = express();
 
 // Behind Railway/Replit/Fly proxies: trust the first hop so req.ip and req.secure are correct.
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
+app.use(httpsRedirect);
 
 // Cheap liveness probe for the host's health check (no upstream calls, no rate limit).
 app.get("/healthz", (_req, res) => {

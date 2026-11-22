@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import slowDown from 'express-slow-down';
@@ -23,10 +24,9 @@ export const createRateLimit = (windowMs: number, max: number, message?: string)
       return false;
     },
     // Custom key generator for more sophisticated limiting
-    keyGenerator: (req) => {
-      // Use IP + User-Agent for better identification
-      return `${req.ip}-${req.get('User-Agent')?.slice(0, 50) || 'unknown'}`;
-    }
+    // Key on client IP only (trust proxy is set). Including the User-Agent let clients
+    // bypass the limit just by rotating that header.
+    keyGenerator: (req) => req.ip || 'unknown'
   });
 };
 
@@ -60,92 +60,35 @@ export const rateLimits = {
 // Helmet security configuration for Bitcoin platform
 export const securityConfig = helmet({
   // Content Security Policy - Allow necessary resources for crypto platform and development
+  // Content Security Policy. The client only talks to its own origin (all exchange
+  // data is fetched server-side), so connect-src is 'self'. No inline or eval'd script.
   contentSecurityPolicy: {
+    useDefaults: false,
     directives: {
-      defaultSrc: [
-        "'self'",
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org"
-      ],
-      styleSrc: [
-        "'self'", 
-        "'unsafe-inline'", // Required for Tailwind CSS
-        "https://fonts.googleapis.com",
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org"
-      ],
-      fontSrc: [
-        "'self'",
-        "https://fonts.gstatic.com",
-        "data:", // For embedded fonts
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org"
-      ],
-      scriptSrc: [
-        "'self'",
-        "'unsafe-inline'", // Required for inline scripts
-        "'unsafe-eval'", // Required for dynamic imports
-        "https://www.googletagmanager.com", // Google Analytics
-        "https://www.google-analytics.com",
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org"
-      ],
-      imgSrc: [
-        "'self'",
-        "data:",
-        "https:", // Allow HTTPS images (for logos, charts)
-        "blob:", // For generated charts
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org"
-      ],
-      connectSrc: [
-        "'self'",
-        "https://api.coingecko.com",
-        "https://api.coindesk.com", 
-        "https://api.coinbase.com",
-        "https://api.blockchain.info",
-        "https://api-pub.bitfinex.com",
-        "https://api.kraken.com",
-        "https://www.bitstamp.net",
-        "https://api.gemini.com",
-        "https://www.google-analytics.com",
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org",
-        "wss://bitcoinbytes.org",
-        "wss://www.bitcoinbytes.org",
-        "ws://localhost:*", // Dev WebSocket
-        "wss:", // WebSocket connections
-        "ws:" // WebSocket connections (dev)
-      ],
-      mediaSrc: [
-        "'self'", 
-        "data:", 
-        "blob:",
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org"
-      ],
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      scriptSrcAttr: ["'none'"],
+      // React inline style attributes and Radix positioning need inline styles.
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      connectSrc: ["'self'"],
+      mediaSrc: ["'self'"],
       objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"],
+      manifestSrc: ["'self'"],
+      workerSrc: ["'self'"],
       upgradeInsecureRequests: [],
-      baseUri: [
-        "'self'",
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org"
-      ],
-      formAction: [
-        "'self'",
-        "https://bitcoinbytes.org",
-        "https://www.bitcoinbytes.org"
-      ],
-      frameAncestors: ["'self'"],
-      scriptSrcAttr: ["'none'"]
     },
   },
-  
+
   // Strict Transport Security - Force HTTPS in production
   hsts: {
     maxAge: 31536000, // 1 year
     includeSubDomains: true,
-    preload: true
+    preload: false // only opt into the preload list deliberately, once the domain is final
   },
   
   // Prevent clickjacking
@@ -154,8 +97,6 @@ export const securityConfig = helmet({
   // Prevent MIME type sniffing
   noSniff: true,
   
-  // Block pages from loading when XSS detected
-  xssFilter: true,
   
   // Hide X-Powered-By header
   hidePoweredBy: true,
@@ -371,3 +312,35 @@ export const emergencySecurity = {
     }, 'medium');
   }
 };
+
+/**
+ * Admin gate for maintenance endpoints. Requires ADMIN_TOKEN to be set (>= 32 chars)
+ * and sent as "Authorization: Bearer <token>". Without ADMIN_TOKEN the endpoints 404.
+ */
+export function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  const expected = process.env.ADMIN_TOKEN || '';
+  if (expected.length < 32) {
+    res.status(404).json({ message: 'Not found' });
+    return;
+  }
+  const header = req.get('Authorization') || '';
+  const provided = header.startsWith('Bearer ') ? header.slice(7) : '';
+  const a = Buffer.from(provided);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !timingSafeEqual(a, b)) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+  next();
+}
+
+/** Redirect plain-HTTP requests to HTTPS in production (behind a TLS-terminating proxy). */
+export function httpsRedirect(req: Request, res: Response, next: NextFunction) {
+  if (process.env.NODE_ENV !== 'production' || req.path === '/healthz') return next();
+  const proto = (req.get('X-Forwarded-Proto') || '').split(',')[0].trim();
+  if (proto === 'http') {
+    const host = req.get('host');
+    if (host) return res.redirect(301, `https://${host}${req.originalUrl}`);
+  }
+  next();
+}
