@@ -26,12 +26,12 @@ export function Header() {
         </Link>
 
         {/* Desktop nav */}
-        <nav aria-label="Main navigation" className="hidden md:flex items-center gap-1">
+        <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-1">
           {NAV_LINKS.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
                 location === href
                   ? 'bg-[#f7931a]/15 text-[#f7931a]'
                   : 'text-white/60 hover:text-white hover:bg-white/6'
@@ -45,7 +45,7 @@ export function Header() {
             href={CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-2 flex items-center gap-1 text-xs text-white/70 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
+            className="ml-2 flex items-center gap-1 whitespace-nowrap text-xs text-white/70 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
             aria-label="BitcoinBytes on YouTube (opens in a new tab)"
           >
             <Youtube className="w-3.5 h-3.5 text-[#f7931a]" aria-hidden="true" /> YouTube
@@ -54,16 +54,16 @@ export function Header() {
             href={X_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-1 flex items-center gap-1 text-xs text-white/70 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
+            className="ml-1 flex items-center gap-1 whitespace-nowrap text-xs text-white/70 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-2.5 py-1.5 transition-colors"
             aria-label={`${X_HANDLE} on X (opens in a new tab)`}
           >
-            {X_HANDLE} <ExternalLink className="w-3 h-3" aria-hidden="true" />
+            <span aria-hidden="true" className="font-semibold">𝕏</span><span className="hidden xl:inline">{X_HANDLE}</span>
           </a>
         </nav>
 
         {/* Mobile menu toggle */}
         <button
-          className="md:hidden text-white/60 hover:text-white p-2 rounded-lg hover:bg-white/8 transition-colors"
+          className="lg:hidden text-white/60 hover:text-white p-2 rounded-lg hover:bg-white/8 transition-colors"
           onClick={() => setMenuOpen((v) => !v)}
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
@@ -77,7 +77,7 @@ export function Header() {
       {menuOpen && (
         <nav
           id="mobile-nav"
-          className="md:hidden border-t border-white/8 bg-[#0a0a12]/95 px-4 py-3 space-y-1"
+          className="lg:hidden border-t border-white/8 bg-[#0a0a12]/95 px-4 py-3 space-y-1"
           aria-label="Mobile navigation"
         >
           {NAV_LINKS.map(({ href, label }) => (

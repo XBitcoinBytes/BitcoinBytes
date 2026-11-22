@@ -18,7 +18,7 @@ describe('per-route share cards', () => {
     expect(html).toContain('<meta property="og:title" content="Learn Bitcoin | BitcoinBytes" />');
     expect(html).toContain('<meta name="twitter:title" content="Learn Bitcoin | BitcoinBytes" />');
     expect(html).toContain('<meta name="twitter:image"');
-    expect(html).toMatch(/<div id="root"><main[^>]*><h1>Learn Bitcoin<\/h1>/);
+    expect(html).toMatch(/<div id="root"><\/div><noscript><main[^>]*><h1>Learn Bitcoin<\/h1>/);
   });
   it('does not double the brand on the home title', () => {
     expect(renderShell(SHELL, '/')).toContain('<title>BitcoinBytes: Compare Bitcoin Purchase Estimates</title>');

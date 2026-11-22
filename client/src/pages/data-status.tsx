@@ -102,8 +102,16 @@ export default function DataStatus() {
         )}
 
         {isFetching && !data && (
-          <div className="flex items-center gap-3 py-16 text-white/60">
-            <RefreshCw className="w-5 h-5 animate-spin" />Checking all providers…
+          <div role="status" aria-label="Checking all providers">
+            <p className="flex items-center gap-3 mb-3 text-white/60 text-sm">
+              <RefreshCw className="w-4 h-4 animate-spin" aria-hidden="true" />Checking all providers…
+            </p>
+            {/* Placeholder cards reserve the list's height so the page doesn't jump when results land. */}
+            <div className="space-y-3 mb-10" aria-hidden="true">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <div key={i} className="h-[104px] bg-white/3 border border-white/8 rounded-xl animate-pulse" />
+              ))}
+            </div>
           </div>
         )}
 

@@ -94,7 +94,8 @@ export function renderShell(shell: string, routeKey: string): string {
   html = set(html, /<meta name="twitter:title" content="[^"]*"\s*\/?>/, `<meta name="twitter:title" content="${title}" />`);
   html = set(html, /<meta name="twitter:description" content="[^"]*"\s*\/?>/, `<meta name="twitter:description" content="${desc}" />`);
   html = set(html, /<link rel="canonical" href="[^"]*"\s*\/?>/, `<link rel="canonical" href="${url}" />`);
-  // Crawlable fallback for non-JS clients; React replaces #root's contents on load.
-  html = html.replace('<div id="root"></div>', `<div id="root"><main style="max-width:40rem;margin:6rem auto;padding:0 1rem;color:#fff;font-family:system-ui"><h1>${esc(meta.title)}</h1><p>${esc(meta.summary)}</p></main></div>`);
+  // Crawlable fallback for non-JS clients.
+  // In <noscript> so JS visitors never see it replaced (no layout shift).
+  html = html.replace('<div id="root"></div>', `<div id="root"></div><noscript><main style="max-width:40rem;margin:6rem auto;padding:0 1rem;color:#fff;font-family:system-ui"><h1>${esc(meta.title)}</h1><p>${esc(meta.summary)}</p><p>BitcoinBytes needs JavaScript for live comparisons.</p></main></noscript>`);
   return html;
 }
