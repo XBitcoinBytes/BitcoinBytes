@@ -1,6 +1,6 @@
 /**
  * Educational content for /learn. Neutral, factual explanations only:
- * no price predictions, targets, buy/sell signals or investment recommendations.
+ * no price forecasts or targets, buy/sell signals or investment recommendations.
  */
 export type Level = 'Beginner' | 'Intermediate' | 'Advanced';
 

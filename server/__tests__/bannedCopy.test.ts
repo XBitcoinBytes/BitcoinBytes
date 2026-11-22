@@ -12,6 +12,7 @@ const BANNED: RegExp[] = [
   /on sale/i,
   /buy the dip/i,
   /price target/i,
+  /price prediction/i,
   /\btarget24h\b|\btarget7d\b/i,
   /['"`>]\s*(BUY|SELL|STRONG BUY)\s*['"`<]/,
   /trading signal/i,
