@@ -2,9 +2,7 @@
  * Binance.US Provider Adapter
  *
  * Order book: https://api.binance.us/api/v3/depth?symbol=BTCUSD&limit=50
- * Taker fee:  0.60% entry-tier (standard, no BNB discount)
- * Fee source: https://www.binance.us/fees
- *             Verified: published public schedule, no authentication required.
+ * Taker fee + source: shared/feeSchedule.ts (PUBLISHED_FEES.binanceus, dated FEES_CHECKED_ON)
  *
  * WARNING: Binance.US has faced significant regulatory pressure (SEC action
  * 2023). USD deposit/withdrawal rails were suspended and partially restored.
@@ -18,11 +16,12 @@
 
 import type { ProviderAdapter, ProviderResult, RankedResult, UnrankedResult } from '../types.js';
 import { PROVIDER_TIMEOUT_MS, STALE_TTL_MS, ORDERBOOK_CACHE_MS } from '../types.js';
+import { PUBLISHED_FEES, feeSourceCitation } from '../../../shared/feeSchedule.js';
 import { walkOrderBook, applyTakerFee, parseBinanceUsBook } from '../orderbook.js';
 
 const ORDER_BOOK_URL = 'https://api.binance.us/api/v3/depth?symbol=BTCUSD&limit=50';
-const TAKER_FEE_RATE = 0.006; // 0.60% – standard entry tier
-const FEE_RATE_SOURCE = 'Binance.US fee schedule (binance.us/fees), standard tier (no BNB discount)';
+const TAKER_FEE_RATE = PUBLISHED_FEES.binanceus.takerRate; // see shared/feeSchedule.ts
+const FEE_RATE_SOURCE = feeSourceCitation(PUBLISHED_FEES.binanceus);
 const ORDER_BOOK_SOURCE = 'Binance.US public REST API v3 /depth endpoint';
 const PURCHASE_URL = 'https://www.binance.us/buy-sell-crypto';
 
@@ -103,6 +102,7 @@ export const binanceUsAdapter: ProviderAdapter = {
         levelsConsumed: walk.levelsConsumed,
         takerFeeRate: TAKER_FEE_RATE,
         feeRateSource: FEE_RATE_SOURCE,
+        feeRateSourceUrl: PUBLISHED_FEES.binanceus.sourceUrl,
         orderBookSource: ORDER_BOOK_SOURCE,
         fetchedAt: bookFetchedAt,
         dataAgeMs,

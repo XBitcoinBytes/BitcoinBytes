@@ -1,6 +1,10 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { PUBLISHED_FEES, formatCheckedOn, formatFeePercent } from '@shared/feeSchedule';
+
+const FEE_ROWS = [PUBLISHED_FEES.binanceus, PUBLISHED_FEES.cryptodotcom, PUBLISHED_FEES.kraken];
+const EXAMPLE_FEE = PUBLISHED_FEES.kraken;
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
@@ -38,7 +42,7 @@ export default function Fees() {
                 stable enough to verify.
               </p>
               <div className="mt-3 text-xs font-mono text-[#f7931a] bg-black/20 rounded p-2">
-                Example: $500 × 0.26% = $1.30 fee on Kraken
+                Example: $500 × {formatFeePercent(EXAMPLE_FEE.takerRate)} = ${(500 * EXAMPLE_FEE.takerRate).toFixed(2)} fee on {EXAMPLE_FEE.providerName} (Tier 1, checked {formatCheckedOn()})
               </div>
             </div>
             <div className="bg-white/3 border border-white/10 rounded-xl p-4">
@@ -106,39 +110,28 @@ export default function Fees() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                <tr>
-                  <td className="px-4 py-3 text-white font-medium">Kraken</td>
-                  <td className="px-4 py-3 text-right font-mono text-[#f7931a]">0.26%</td>
-                  <td className="px-4 py-3">
-                    <a href="https://www.kraken.com/en-us/features/fee-schedule" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#f7931a] underline">
-                      kraken.com fee schedule
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-white font-medium">Crypto.com Exchange</td>
-                  <td className="px-4 py-3 text-right font-mono text-[#f7931a]">0.075%</td>
-                  <td className="px-4 py-3">
-                    <a href="https://crypto.com/exchange/document/fees-limits" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#f7931a] underline">
-                      crypto.com fees &amp; limits
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-white font-medium">Binance.US</td>
-                  <td className="px-4 py-3 text-right font-mono text-[#f7931a]">0.60%</td>
-                  <td className="px-4 py-3">
-                    <a href="https://www.binance.us/fees" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#f7931a] underline">
-                      binance.us/fees
-                    </a>
-                  </td>
-                </tr>
+                {FEE_ROWS.map((f) => (
+                  <tr key={f.providerId}>
+                    <td className="px-4 py-3 text-white font-medium">
+                      {f.providerName}
+                      <div className="text-white/50 font-normal mt-0.5">{f.tier}</div>
+                    </td>
+                    <td className="px-4 py-3 text-right font-mono text-[#f7931a]">{formatFeePercent(f.takerRate)}</td>
+                    <td className="px-4 py-3">
+                      <a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#f7931a] underline">
+                        {f.sourceLabel}
+                      </a>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
           <p className="text-white/60 text-xs">
             Exchange fees change. We cite the fee schedule source with each result — check it before
-            transacting. This table was verified at the time of our last code update; see{' '}
+            transacting. <strong className="text-white" data-testid="fees-checked">Fees checked {formatCheckedOn()}</strong>{' '}
+            on each exchange's official fee page (linked above). If a check is more than 30 days old, the comparison
+            stops showing a lowest-cost badge until the rates are re-verified. See{' '}
             <a href="/methodology" className="text-[#f7931a] hover:text-[#f7931a] underline">Methodology</a>{' '}
             for how fees are applied.
           </p>

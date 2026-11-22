@@ -2,9 +2,7 @@
  * Kraken Provider Adapter
  *
  * Order book: https://api.kraken.com/0/public/Depth?pair=XBTUSD&count=50
- * Taker fee:  0.26% entry-tier (first 50k USD 30-day volume)
- * Fee source: https://www.kraken.com/en-us/features/fee-schedule
- *             Verified: published public schedule, no authentication required.
+ * Taker fee + source: shared/feeSchedule.ts (PUBLISHED_FEES.kraken, dated FEES_CHECKED_ON)
  *
  * Geographic: Available to most US states; some state-level restrictions apply.
  * Note: Results are estimated all-in costs, not guaranteed executable quotes.
@@ -12,11 +10,12 @@
 
 import type { ProviderAdapter, ProviderResult, RankedResult, UnrankedResult } from '../types.js';
 import { PROVIDER_TIMEOUT_MS, STALE_TTL_MS, ORDERBOOK_CACHE_MS } from '../types.js';
+import { PUBLISHED_FEES, feeSourceCitation } from '../../../shared/feeSchedule.js';
 import { walkOrderBook, applyTakerFee, parseKrakenBook } from '../orderbook.js';
 
 const ORDER_BOOK_URL = 'https://api.kraken.com/0/public/Depth?pair=XBTUSD&count=50';
-const TAKER_FEE_RATE = 0.0026; // 0.26% – entry tier
-const FEE_RATE_SOURCE = 'Kraken fee schedule (kraken.com/en-us/features/fee-schedule), entry tier ≤$50k/30d volume';
+const TAKER_FEE_RATE = PUBLISHED_FEES.kraken.takerRate; // see shared/feeSchedule.ts
+const FEE_RATE_SOURCE = feeSourceCitation(PUBLISHED_FEES.kraken);
 const ORDER_BOOK_SOURCE = 'Kraken public REST API v0 /Depth endpoint';
 const PURCHASE_URL = 'https://www.kraken.com/buy-crypto';
 
@@ -100,6 +99,7 @@ export const krakenAdapter: ProviderAdapter = {
         levelsConsumed: walk.levelsConsumed,
         takerFeeRate: TAKER_FEE_RATE,
         feeRateSource: FEE_RATE_SOURCE,
+        feeRateSourceUrl: PUBLISHED_FEES.kraken.sourceUrl,
         orderBookSource: ORDER_BOOK_SOURCE,
         fetchedAt: bookFetchedAt,
         dataAgeMs,

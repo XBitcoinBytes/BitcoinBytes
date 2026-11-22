@@ -3,6 +3,7 @@ import { usePriceClock } from '@/hooks/use-bitcoin-price';
 import { useState, useCallback } from 'react';
 import { Link2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
+import { PUBLISHED_FEES, formatCheckedOn, formatFeePercent, FEE_STALE_AFTER_DAYS } from '@shared/feeSchedule';
 import { ExternalLink, RefreshCw, AlertTriangle, Clock, CheckCircle, Info, Trophy } from 'lucide-react';
 
 interface RankedResult {
@@ -19,6 +20,7 @@ interface RankedResult {
   levelsConsumed: number;
   takerFeeRate: number;
   feeRateSource: string;
+  feeRateSourceUrl?: string;
   orderBookSource: string;
   fetchedAt: number;
   dataAgeMs: number;
@@ -46,6 +48,8 @@ interface ComparisonResponse {
   generatedAt: string;
   engineVersion: string;
   hasStaleData: boolean;
+  feesCheckedOn?: string;
+  feesStale?: boolean;
   disclaimer: string;
 }
 
@@ -155,7 +159,17 @@ function RankedCard({ result, rank, isWinner }: { result: RankedResult; rank: nu
           </summary>
           <div className="mt-2 text-xs text-white/60 space-y-1">
             <p><span className="text-white/60">Order book:</span> {result.orderBookSource}</p>
-            <p><span className="text-white/60">Fee rate:</span> {result.feeRateSource}</p>
+            <p>
+              <span className="text-white/60">Fee rate:</span> {result.feeRateSource}
+              {result.feeRateSourceUrl && (
+                <>
+                  {' '}
+                  <a href={result.feeRateSourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#f7931a]">
+                    Official fee page
+                  </a>
+                </>
+              )}
+            </p>
           </div>
         </details>
       </div>
@@ -364,8 +378,31 @@ export function ComparisonTool() {
             </div>
           </div>
 
+          {/* Fee-check date + official sources */}
+          <p className="text-xs text-white/60 mb-4" data-testid="fees-checked">
+            Fees checked {formatCheckedOn(data.feesCheckedOn)} · official fee pages:{' '}
+            {Object.values(PUBLISHED_FEES).map((f, i) => (
+              <span key={f.providerId}>
+                {i > 0 && ' · '}
+                <a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#f7931a]">
+                  {f.providerName} {formatFeePercent(f.takerRate)}
+                </a>
+              </span>
+            ))}
+          </p>
+
+          {data.feesStale && (
+            <div className="rounded-xl border border-yellow-700/40 bg-yellow-900/10 p-4 mb-5 flex items-start gap-3" data-testid="fees-stale">
+              <AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-yellow-300">
+                Our fee rates were last checked more than {FEE_STALE_AFTER_DAYS} days ago, so no lowest-cost
+                badge is shown until they are re-verified. Results are listed for reference only.
+              </p>
+            </div>
+          )}
+
           {/* Degraded-data notice */}
-          {!data.hasWinner && (
+          {!data.hasWinner && !data.feesStale && (
             <div className="rounded-xl border border-yellow-700/40 bg-yellow-900/10 p-4 mb-5 flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
               <div className="text-sm">

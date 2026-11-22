@@ -82,7 +82,7 @@ export default function Beginners() {
             for details. The main ones are:
           </p>
           <ul className="list-disc list-inside space-y-2 ml-2">
-            <li><strong className="text-white">Trading fee</strong> — charged on each purchase (commonly 0.075%–2%)</li>
+            <li><strong className="text-white">Trading fee</strong> — charged on each purchase (commonly about 0.02%–2%)</li>
             <li><strong className="text-white">Spread</strong> — some providers embed their revenue in the buy/sell price gap</li>
             <li><strong className="text-white">Payment method fee</strong> — debit cards and instant transfers often cost more than ACH</li>
             <li><strong className="text-white">Withdrawal fee</strong> — to move Bitcoin to your own wallet (excluded from our comparisons)</li>

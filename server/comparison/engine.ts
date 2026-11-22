@@ -26,6 +26,7 @@ import {
   STALE_TTL_MS,
 } from './types.js';
 
+import { FEES_CHECKED_ON, feesAreStale } from '../../shared/feeSchedule.js';
 import { krakenAdapter } from './providers/kraken.js';
 import { binanceUsAdapter } from './providers/binanceus.js';
 import { cryptoDotComAdapter } from './providers/cryptodotcom.js';
@@ -125,7 +126,9 @@ export async function runComparison(usdAmount: number): Promise<ComparisonRespon
   // Sort ranked by BTC received descending (most BTC = best deal)
   ranked.sort((a, b) => b.btcReceived - a.btcReceived);
 
-  const hasWinner = ranked.length >= MIN_RANKED_FOR_WINNER;
+  // Never badge a winner on fee rates nobody has re-checked recently
+  const feesStale = feesAreStale(now);
+  const hasWinner = ranked.length >= MIN_RANKED_FOR_WINNER && !feesStale;
   const hasStaleData = ranked.some((r) => r.state === 'stale');
 
   return {
@@ -136,6 +139,8 @@ export async function runComparison(usdAmount: number): Promise<ComparisonRespon
     generatedAt: new Date().toISOString(),
     engineVersion: ENGINE_VERSION,
     hasStaleData,
+    feesCheckedOn: FEES_CHECKED_ON,
+    feesStale,
     disclaimer: STANDARD_DISCLAIMER,
   };
 }

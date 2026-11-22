@@ -2,9 +2,7 @@
  * Crypto.com Exchange Provider Adapter
  *
  * Order book: https://api.crypto.com/exchange/v1/public/get-book?instrument_name=BTC_USD&depth=50
- * Taker fee:  0.075% entry-tier (standard, no CRO discount)
- * Fee source: https://crypto.com/exchange/document/fees-limits
- *             Verified: published public schedule, no authentication required.
+ * Taker fee + source: shared/feeSchedule.ts (PUBLISHED_FEES.cryptodotcom, dated FEES_CHECKED_ON)
  *
  * IMPORTANT LABEL: This reflects Crypto.com *Exchange* pricing, NOT the
  * Crypto.com App. The Exchange and App are separate products with different
@@ -17,13 +15,14 @@
 
 import type { ProviderAdapter, ProviderResult, RankedResult, UnrankedResult } from '../types.js';
 import { PROVIDER_TIMEOUT_MS, STALE_TTL_MS, ORDERBOOK_CACHE_MS } from '../types.js';
+import { PUBLISHED_FEES, feeSourceCitation } from '../../../shared/feeSchedule.js';
 import { walkOrderBook, applyTakerFee, parseCryptoDotComBook } from '../orderbook.js';
 
 const ORDER_BOOK_URL =
   'https://api.crypto.com/exchange/v1/public/get-book?instrument_name=BTC_USD&depth=50';
-const TAKER_FEE_RATE = 0.00075; // 0.075% – entry tier
+const TAKER_FEE_RATE = PUBLISHED_FEES.cryptodotcom.takerRate; // see shared/feeSchedule.ts
 const FEE_RATE_SOURCE =
-  'Crypto.com Exchange fee schedule (crypto.com/exchange/document/fees-limits), entry tier (no CRO discount)';
+  feeSourceCitation(PUBLISHED_FEES.cryptodotcom);
 const ORDER_BOOK_SOURCE = 'Crypto.com Exchange public REST API v1 /get-book endpoint';
 const PURCHASE_URL = 'https://crypto.com/exchange/trade/spot/BTC_USD';
 
@@ -108,6 +107,7 @@ export const cryptoDotComAdapter: ProviderAdapter = {
         levelsConsumed: walk.levelsConsumed,
         takerFeeRate: TAKER_FEE_RATE,
         feeRateSource: FEE_RATE_SOURCE,
+        feeRateSourceUrl: PUBLISHED_FEES.cryptodotcom.sourceUrl,
         orderBookSource: ORDER_BOOK_SOURCE,
         fetchedAt: bookFetchedAt,
         dataAgeMs,

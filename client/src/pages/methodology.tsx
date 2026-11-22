@@ -1,6 +1,7 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { PUBLISHED_FEES, formatCheckedOn, formatFeePercent, FEE_STALE_AFTER_DAYS } from '@shared/feeSchedule';
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
@@ -81,7 +82,8 @@ effective_rate = usd_amount / btc_received`}
           <p>
             Only the entry-tier taker rate is used — the rate a first-time buyer with no loyalty
             tokens or volume discounts would pay. Fee rates sourced from each exchange's official
-            published schedule on the date listed in the data source citation shown with each result.
+            published schedule. <strong className="text-white" data-testid="fees-checked">Fees checked {formatCheckedOn()}.</strong>{' '}
+            If that check is more than {FEE_STALE_AFTER_DAYS} days old, no lowest-cost badge is shown until the rates are re-verified.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-xs border border-white/10 rounded-lg overflow-hidden">
@@ -93,9 +95,13 @@ effective_rate = usd_amount / btc_received`}
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                <tr><td className="px-3 py-2 text-white/80">Kraken</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.26%</td><td className="px-3 py-2 text-white/60">kraken.com/en-us/features/fee-schedule</td></tr>
-                <tr><td className="px-3 py-2 text-white/80">Crypto.com Exchange</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.075%</td><td className="px-3 py-2 text-white/60">crypto.com/exchange/document/fees-limits</td></tr>
-                <tr><td className="px-3 py-2 text-white/80">Binance.US</td><td className="px-3 py-2 text-right font-mono text-[#f7931a]">0.60%</td><td className="px-3 py-2 text-white/60">binance.us/fees</td></tr>
+                {[PUBLISHED_FEES.binanceus, PUBLISHED_FEES.cryptodotcom, PUBLISHED_FEES.kraken].map((f) => (
+                  <tr key={f.providerId}>
+                    <td className="px-3 py-2 text-white/80">{f.providerName}<div className="text-white/50 mt-0.5">{f.tier}</div></td>
+                    <td className="px-3 py-2 text-right font-mono text-[#f7931a]">{formatFeePercent(f.takerRate)}</td>
+                    <td className="px-3 py-2"><a href={f.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#f7931a] underline">{f.sourceLabel}</a></td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

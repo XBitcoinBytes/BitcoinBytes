@@ -37,6 +37,8 @@ export interface RankedResult {
   takerFeeRate: number;
   /** Human-readable source citation for the fee rate */
   feeRateSource: string;
+  /** Official fee page URL the rate was read from */
+  feeRateSourceUrl?: string;
   /** Human-readable source citation for the order book */
   orderBookSource: string;
   /** Unix ms timestamp of when order book was fetched */
@@ -99,6 +101,10 @@ export interface ComparisonResponse {
   engineVersion: string;
   /** True if any ranked results are stale */
   hasStaleData: boolean;
+  /** ISO date (YYYY-MM-DD) the published fee rates were last checked */
+  feesCheckedOn: string;
+  /** True when the fee check is older than FEE_STALE_AFTER_DAYS; no winner is declared */
+  feesStale: boolean;
   /** Disclaimer shown to users */
   disclaimer: string;
 }
