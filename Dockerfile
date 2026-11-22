@@ -1,12 +1,12 @@
 # Portable production image for BitcoinBytes (works on Railway, Render, Fly, any Docker host).
-FROM node:20-slim AS build
+FROM node:24-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build && npm prune --omit=dev
 
-FROM node:20-slim
+FROM node:24-slim
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /app/package.json ./
