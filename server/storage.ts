@@ -25,9 +25,7 @@ import {
   type OrderBookEntry
 } from "@shared/schema";
 import { coinGeckoService } from "./coingecko";
-import { cryptoCompareService } from "./cryptocompare";
 import { priceService } from "./priceService";
-import { NewsUrlGenerator } from "./urlGenerator";
 
 export interface IStorage {
   // Exchange operations

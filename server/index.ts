@@ -1,17 +1,30 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { serveStatic, log } from "./static";
 import { enhancedRateLimiter } from "./rateLimiter";
 
 const app = express();
+
+// Behind Railway/Replit/Fly proxies: trust the first hop so req.ip and req.secure are correct.
+app.set("trust proxy", 1);
+app.disable("x-powered-by");
+
+// Cheap liveness probe for the host's health check (no upstream calls, no rate limit).
+app.get("/healthz", (_req, res) => {
+  res.status(200).json({ status: "ok", uptimeSeconds: Math.round(process.uptime()) });
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled promise rejection:", reason instanceof Error ? reason.message : reason);
+});
 
 // Security will be handled by helmet middleware from security.ts
 
 // Enhanced rate limiting for API endpoints
 app.use('/api', enhancedRateLimiter.middleware());
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: false, limit: '100kb' }));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -47,26 +60,27 @@ app.use((req, res, next) => {
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
+    const status = Number(err?.status || err?.statusCode) || 500;
+    // Never leak internal error details or stack traces to clients.
+    const message = status < 500 && typeof err?.message === "string" ? err.message : "Internal Server Error";
+    if (status >= 500) console.error("Request error:", err?.stack || err);
+    if (res.headersSent) return;
     res.status(status).json({ message });
-    throw err;
   });
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
+    const { setupVite } = await import("./vite");
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
+  // Serves both the API and the client. Hosts like Railway/Render/Fly inject PORT;
+  // default to 5000 (the Replit-mapped port) when it is not set.
+  const port = Number.parseInt(process.env.PORT ?? "", 10) || 5000;
   server.listen({
     port,
     host: "0.0.0.0",
