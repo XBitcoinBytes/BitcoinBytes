@@ -4,12 +4,37 @@ import { Footer } from '@/components/footer';
 import InteractiveBitcoinConcepts from '@/components/interactive-bitcoin-concepts';
 import NewsHeadlines from '@/components/news-headlines';
 import ChannelVideos from '@/components/channel-videos';
+import NetworkNowPanel from '@/components/network-now';
 import { CHANNEL_URL, PODCAST_NAME } from '@/content/channel';
-import { GLOSSARY, RESOURCES } from '@/content/learn';
+import { GLOSSARY, GLOSSARY_GROUPS, RESOURCES } from '@/content/learn';
+import { useEffect } from 'react';
 import { ExternalLink } from 'lucide-react';
 
 export default function Learn() {
   usePageMeta({ canonical: '/learn' });
+
+  // Deep links like /learn#difficulty-adjustment: the page renders after load and the video/news
+  // sections above can still grow, so re-align a few times until the reader scrolls themselves.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    let userScrolled = false;
+    const stop = () => { userScrolled = true; };
+    window.addEventListener('wheel', stop, { passive: true });
+    window.addEventListener('touchmove', stop, { passive: true });
+    window.addEventListener('keydown', stop);
+    const align = () => {
+      if (userScrolled) return;
+      document.getElementById(id)?.scrollIntoView({ block: 'start' });
+    };
+    const timers = [0, 400, 1200, 2500].map((ms) => window.setTimeout(align, ms));
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener('wheel', stop);
+      window.removeEventListener('touchmove', stop);
+      window.removeEventListener('keydown', stop);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0a0a12] text-white flex flex-col">
@@ -42,16 +67,30 @@ export default function Learn() {
           <ChannelVideos limit={6} />
         </section>
 
+        <section aria-labelledby="network-heading" className="mb-14">
+          <h2 id="network-heading" className="text-xl font-bold text-white mb-1">Network right now</h2>
+          <p className="text-white/60 text-sm mb-4">Live facts from the Bitcoin network itself.</p>
+          <NetworkNowPanel />
+        </section>
+
         <section aria-labelledby="glossary-heading" className="mb-14">
-          <h2 id="glossary-heading" className="text-xl font-bold text-white mb-4">Glossary</h2>
-          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
-            {GLOSSARY.map((g) => (
-              <div key={g.term} className="border-b border-white/10 pb-3">
-                <dt className="font-semibold text-white text-sm">{g.term}</dt>
-                <dd className="text-white/70 text-sm mt-1">{g.definition}</dd>
-              </div>
-            ))}
-          </dl>
+          <h2 id="glossary-heading" className="text-xl font-bold text-white mb-1">Glossary</h2>
+          <p className="text-white/60 text-sm mb-4">Plain-English definitions. Each term has its own link, for example <code className="text-white/80">/learn#halving</code>.</p>
+          {GLOSSARY_GROUPS.map((group) => (
+            <div key={group} className="mb-8 last:mb-0">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-[#f7931a] mb-3">{group}</h3>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                {GLOSSARY.filter((g) => g.group === group).map((g) => (
+                  <div key={g.id} id={g.id} className="border-b border-white/10 pb-3 scroll-mt-24 target:border-[#f7931a]/60">
+                    <dt className="font-semibold text-white text-sm">
+                      <a href={`#${g.id}`} className="hover:text-[#f7931a]">{g.term}</a>
+                    </dt>
+                    <dd className="text-white/70 text-sm mt-1">{g.definition}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ))}
         </section>
 
         <section aria-labelledby="news-heading" className="mb-14">

@@ -1,7 +1,12 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { PUBLISHED_FEES, STRIKE_FEE_NOTE, formatCheckedOn, formatFeePercent } from '@shared/feeSchedule';
+import {
+  PUBLISHED_FEES, UNRANKED_FEE_NOTES, FEE_STALE_AFTER_DAYS, formatCheckedOn, formatFeePercent, unrankedFeeNote,
+  type UnrankedProviderId,
+} from '@shared/feeSchedule';
+
+const UNRANKED_ORDER: UnrankedProviderId[] = ['coinbase', 'strike', 'river', 'cashapp', 'robinhood', 'swan'];
 
 const FEE_ROWS = Object.values(PUBLISHED_FEES).sort((a, b) => a.takerRate - b.takerRate);
 const EXAMPLE_FEE = PUBLISHED_FEES.kraken;
@@ -54,7 +59,7 @@ export default function Fees() {
                 spread is embedded in the result naturally.
               </p>
               <p>
-                Some providers (notably Robinhood) embed all their revenue in the spread with no
+                Some providers (notably Robinhood, by default) embed their revenue in the spread with no
                 separate explicit fee. This is harder to compare fairly because the spread is not
                 publicly disclosed as a fixed rate.
               </p>
@@ -140,8 +145,9 @@ export default function Fees() {
         <Section id="unranked-fees" title="Fees for unranked providers">
           <p>
             The following providers have no publicly accessible API for real-time purchase quotes.
-            Their fees are taken from published marketing or help pages and may not reflect your
-            actual purchase cost. Verify directly with each provider.
+            Their fees are taken from each provider's own fee or help page and may not reflect your
+            actual purchase cost. Each note shows the date we last checked it; a note not re-checked
+            within {FEE_STALE_AFTER_DAYS} days is hidden. Verify directly with each provider.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-xs border border-white/10 rounded-xl overflow-hidden">
@@ -152,20 +158,22 @@ export default function Fees() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 text-white/50">
-                <tr><td className="px-4 py-3 text-white/70">Coinbase (simple buy)</td><td className="px-4 py-3">Variable — depends on payment method, order size, location. Check at checkout. (Coinbase Advanced is ranked above.)</td></tr>
-                <tr>
-                  <td className="px-4 py-3 text-white/70">Strike</td>
-                  <td className="px-4 py-3" data-testid="strike-fee-note">
-                    {STRIKE_FEE_NOTE.summary} Checked {formatCheckedOn()} on{' '}
-                    <a href={STRIKE_FEE_NOTE.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#f7931a]">
-                      {STRIKE_FEE_NOTE.sourceLabel}
-                    </a>.
-                  </td>
-                </tr>
-                <tr><td className="px-4 py-3 text-white/70">River</td><td className="px-4 py-3">~1.3% for instant purchases. Verify at river.com.</td></tr>
-                <tr><td className="px-4 py-3 text-white/70">Cash App</td><td className="px-4 py-3">Service fee + spread. Shown only at point of sale.</td></tr>
-                <tr><td className="px-4 py-3 text-white/70">Robinhood</td><td className="px-4 py-3">No explicit fee; revenue through embedded spread. Amount undisclosed.</td></tr>
-                <tr><td className="px-4 py-3 text-white/70">Swan Bitcoin</td><td className="px-4 py-3">Up to 0.99% recurring; up to 2.29% one-time. Verify at swanbitcoin.com.</td></tr>
+                {UNRANKED_ORDER.map((id) => {
+                  const fee = UNRANKED_FEE_NOTES[id];
+                  const note = unrankedFeeNote(id);
+                  return (
+                    <tr key={id}>
+                      <td className="px-4 py-3 text-white/70">{fee.providerName}</td>
+                      <td className="px-4 py-3" data-testid={`${id}-fee-note`}>
+                        {note.text}
+                        {id === 'coinbase' && ' (Coinbase Advanced is ranked above.)'} Source:{' '}
+                        <a href={note.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-[#f7931a]">
+                          {note.sourceLabel}
+                        </a>.
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

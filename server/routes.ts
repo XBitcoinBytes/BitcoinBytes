@@ -21,7 +21,8 @@ import { liveNewsService } from "./liveNewsService";
 import { youtubeService } from "./youtubeService";
 import compression from "compression";
 import { publicPriceService } from "./publicPriceService";
-import { handleCompare } from './comparison/route.js';
+import { handleCompare, handleCompareHealth } from './comparison/route.js';
+import { networkNowService } from './networkNowService';
 
 // WebSocket connection manager
 const wsClients = new Set<WebSocket>();
@@ -76,6 +77,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Comparison engine — live order-book + verified fees, no synthetic data
   app.get('/api/compare', handleCompare);
+  // Uptime/alert probe: 200 only when at least 2 exchanges return live order-book data.
+  app.get('/api/compare/health', handleCompareHealth);
 
   // Exchange routes - Enhanced with caching and monitoring
   app.get("/api/exchanges", async (req, res) => {
@@ -365,6 +368,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error fetching chart data:", error);
       res.status(500).json({ message: "Failed to fetch chart data" });
     }
+  });
+
+  // "Network right now" panel on /learn: real block-explorer facts only, no price.
+  app.get("/api/network/now", async (_req, res) => {
+    const data = await networkNowService.getNow();
+    res.set("Cache-Control", "public, max-age=30");
+    res.json(data);
   });
 
   // Network stats endpoint

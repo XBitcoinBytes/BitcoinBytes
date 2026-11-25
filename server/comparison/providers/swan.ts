@@ -1,14 +1,14 @@
 /**
  * Swan Bitcoin Informational Provider
  *
- * Swan has no documented public API for purchase quotes. Swan primarily
- * offers recurring/DCA purchases; one-time instant purchases are secondary.
- * Fee information is published on their website but not via API.
+ * Swan has no documented public API for purchase quotes. Its fee is published
+ * on its website (shared/feeSchedule.ts UNRANKED_FEE_NOTES) but not via API.
  *
  * This adapter is permanently UNRANKED.
  */
 
 import type { ProviderAdapter, ProviderResult, UnrankedResult } from '../types.js';
+import { unrankedFeeNote } from '../../../shared/feeSchedule.js';
 
 const PURCHASE_URL = 'https://www.swanbitcoin.com/';
 
@@ -18,17 +18,18 @@ export const swanAdapter: ProviderAdapter = {
   purchaseUrl: PURCHASE_URL,
 
   async getQuote(_usdAmount: number): Promise<ProviderResult> {
+    const note = unrankedFeeNote('swan');
     const unranked: UnrankedResult = {
       providerId: 'swan',
       providerName: 'Swan Bitcoin',
       providerUrl: PURCHASE_URL,
       state: 'incomplete',
       reason:
-        'Swan has no public API for purchase quotes. Swan is primarily a recurring/DCA platform; ' +
-        'one-time purchase fee and price cannot be retrieved without authentication.',
+        'Swan has no public API for purchase quotes, so an amount-specific price cannot be ' +
+        'verified without an account.',
       partialData: {
-        publishedFeeNote: 'Swan charges up to 0.99% for recurring auto-buys and up to 2.29% for one-time purchases (see Swan website for current rates).',
-        feeUrl: 'https://www.swanbitcoin.com/pricing/',
+        publishedFeeNote: note.text,
+        feeUrl: note.sourceUrl,
       },
       fetchedAt: Date.now(),
     };

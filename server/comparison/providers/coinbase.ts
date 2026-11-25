@@ -16,10 +16,10 @@
 
 import type { ProviderAdapter, ProviderResult, UnrankedResult } from '../types.js';
 import { PROVIDER_TIMEOUT_MS, STALE_TTL_MS, ORDERBOOK_CACHE_MS } from '../types.js';
+import { unrankedFeeNote } from '../../../shared/feeSchedule.js';
 
 const PRICE_URL = 'https://api.coinbase.com/v2/prices/BTC-USD/buy';
 const PURCHASE_URL = 'https://www.coinbase.com/buy-bitcoin';
-const FEE_URL = 'https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees';
 
 interface CacheEntry {
   price: number;
@@ -35,6 +35,7 @@ export const coinbaseAdapter: ProviderAdapter = {
   async getQuote(usdAmount: number, timeoutMs = PROVIDER_TIMEOUT_MS): Promise<ProviderResult> {
     const fetchedAt = Date.now();
     const now = Date.now();
+    const note = unrankedFeeNote('coinbase', now);
 
     try {
       let indicativeAsk: number | undefined;
@@ -73,9 +74,8 @@ export const coinbaseAdapter: ProviderAdapter = {
           'Coinbase Advanced (order book + published taker fee) is ranked separately.',
         partialData: {
           indicativeAsk,
-          publishedFeeNote:
-            'Fees vary; see Coinbase fee help page. Simple Buy spread is typically included in quoted price.',
-          feeUrl: FEE_URL,
+          publishedFeeNote: note.text,
+          feeUrl: note.sourceUrl,
         },
         fetchedAt,
       };
@@ -89,8 +89,8 @@ export const coinbaseAdapter: ProviderAdapter = {
         state: 'unavailable',
         reason: `Coinbase indicative price unavailable: ${message}`,
         partialData: {
-          publishedFeeNote: 'Fees vary; see Coinbase fee help page.',
-          feeUrl: FEE_URL,
+          publishedFeeNote: note.text,
+          feeUrl: note.sourceUrl,
         },
         fetchedAt,
       };

@@ -2,8 +2,7 @@
  * Strike Informational Provider
  *
  * Strike has NO public unauthenticated API. api.strike.me requires OAuth 2.0
- * for all resources. Published fee note comes from shared/feeSchedule.ts (STRIKE_FEE_NOTE).
- * Strike is not available in all US states (NY excluded as of last review).
+ * for all resources. Published fee note comes from shared/feeSchedule.ts (UNRANKED_FEE_NOTES).
  *
  * This adapter is permanently UNRANKED. It exists to show Strike in the UI
  * with an honest explanation of what is missing, per the requirement to display
@@ -11,7 +10,7 @@
  */
 
 import type { ProviderAdapter, ProviderResult, UnrankedResult } from '../types.js';
-import { STRIKE_FEE_NOTE, formatCheckedOn } from '../../../shared/feeSchedule.js';
+import { unrankedFeeNote } from '../../../shared/feeSchedule.js';
 
 const PURCHASE_URL = 'https://strike.me/buy/';
 
@@ -21,6 +20,7 @@ export const strikeAdapter: ProviderAdapter = {
   purchaseUrl: PURCHASE_URL,
 
   async getQuote(_usdAmount: number): Promise<ProviderResult> {
+    const note = unrankedFeeNote('strike');
     const unranked: UnrankedResult = {
       providerId: 'strike',
       providerName: 'Strike',
@@ -30,8 +30,8 @@ export const strikeAdapter: ProviderAdapter = {
         'Strike has no public API for purchase quotes, so an amount-specific price and fee cannot be ' +
         'verified without an account. Its published fees are shown for reference only.',
       partialData: {
-        publishedFeeNote: `${STRIKE_FEE_NOTE.summary} Checked ${formatCheckedOn()}.`,
-        feeUrl: STRIKE_FEE_NOTE.sourceUrl,
+        publishedFeeNote: note.text,
+        feeUrl: note.sourceUrl,
       },
       fetchedAt: Date.now(),
     };

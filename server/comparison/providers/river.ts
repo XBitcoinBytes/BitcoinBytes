@@ -1,14 +1,15 @@
 /**
  * River Informational Provider
  *
- * River has no documented public API for purchase quotes. Their fee of
- * approximately 1.3% for instant purchases is published on their website
+ * River has no documented public API for purchase quotes. Its fee schedule is
+ * published in its Help Center (shared/feeSchedule.ts UNRANKED_FEE_NOTES)
  * but is not accessible via any API endpoint without authentication.
  *
  * This adapter is permanently UNRANKED.
  */
 
 import type { ProviderAdapter, ProviderResult, UnrankedResult } from '../types.js';
+import { unrankedFeeNote } from '../../../shared/feeSchedule.js';
 
 const PURCHASE_URL = 'https://river.com/buy';
 
@@ -18,6 +19,7 @@ export const riverAdapter: ProviderAdapter = {
   purchaseUrl: PURCHASE_URL,
 
   async getQuote(_usdAmount: number): Promise<ProviderResult> {
+    const note = unrankedFeeNote('river');
     const unranked: UnrankedResult = {
       providerId: 'river',
       providerName: 'River',
@@ -27,8 +29,8 @@ export const riverAdapter: ProviderAdapter = {
         'River has no public API for purchase quotes. A verified amount-specific price ' +
         'and fee cannot be obtained without authentication.',
       partialData: {
-        publishedFeeNote: 'River charges approximately 1.3% for instant purchases (see river.com for current rates). Available in most US states.',
-        feeUrl: 'https://river.com/learn/what-are-rivers-fees/',
+        publishedFeeNote: note.text,
+        feeUrl: note.sourceUrl,
       },
       fetchedAt: Date.now(),
     };
