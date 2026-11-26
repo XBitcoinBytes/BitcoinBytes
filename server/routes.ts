@@ -131,6 +131,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Retired platform endpoints (old market/liquidity/AI surfaces). Keep a single 503 so
+  // old bookmarks fail cleanly. Live product routes (compare, prices/current, prices/comparison,
+  // news, youtube, network, health) stay registered below.
   app.use(['/api/prices/historical', '/api/liquidity', '/api/arbitrage', '/api/whale', '/api/charts/price-history', '/api/market/data'], (_req, res) => {
     res.status(503).json({ available: false, message: 'Verified market data unavailable' });
   });
@@ -212,165 +215,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(410).json({ message: 'Manual price updates are disabled' });
   });
 
-  app.get("/api/prices/historical", async (req, res) => {
-    try {
-      let timestamp = new Date();
-      
-      // Validate timestamp parameter if provided
-      if (req.query.timestamp) {
-        const timestampStr = req.query.timestamp as string;
-        const parsedTimestamp = new Date(timestampStr);
-        
-        if (isNaN(parsedTimestamp.getTime())) {
-          return res.status(400).json({ message: "Invalid timestamp format" });
-        }
-        
-        // Prevent future dates and dates too far in the past
-        const now = new Date();
-        const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-        
-        if (parsedTimestamp > now) {
-          return res.status(400).json({ message: "Timestamp cannot be in the future" });
-        }
-        
-        if (parsedTimestamp < oneYearAgo) {
-          return res.status(400).json({ message: "Timestamp cannot be more than one year in the past" });
-        }
-        
-        timestamp = parsedTimestamp;
-      }
-      
-      const historical = await storage.getHistoricalPrices(timestamp);
-      res.json(historical);
-    } catch (error) {
-      console.error("Error fetching historical prices:", error);
-      res.status(500).json({ message: "Failed to fetch historical prices" });
-    }
-  });
-
-  app.get("/api/prices/historical/range", async (req, res) => {
-    try {
-      const startDateStr = req.query.startDate as string;
-      const endDateStr = req.query.endDate as string;
-      
-      if (!startDateStr || !endDateStr) {
-        return res.status(400).json({ message: "Start date and end date are required" });
-      }
-      
-      const startDate = new Date(startDateStr);
-      const endDate = new Date(endDateStr);
-      
-      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-        return res.status(400).json({ message: "Invalid date format" });
-      }
-      
-      // Validate date range logic
-      if (startDate >= endDate) {
-        return res.status(400).json({ message: "Start date must be before end date" });
-      }
-      
-      // Prevent excessive date ranges (max 1 year)
-      const maxRangeMs = 365 * 24 * 60 * 60 * 1000; // 1 year in milliseconds
-      if (endDate.getTime() - startDate.getTime() > maxRangeMs) {
-        return res.status(400).json({ message: "Date range cannot exceed one year" });
-      }
-      
-      const prices = await storage.getHistoricalPricesRange(startDate, endDate);
-      res.json(prices);
-    } catch (error) {
-      console.error("Error fetching historical price range:", error);
-      res.status(500).json({ message: "Failed to fetch historical price range" });
-    }
-  });
-
-  app.post("/api/prices/historical", requireAdmin, async (req, res) => {
-    try {
-      const validatedData = insertHistoricalPriceSchema.parse(req.body);
-      const price = await storage.addHistoricalPrice(validatedData);
-      res.status(201).json(price);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid historical price data", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to add historical price" });
-    }
-  });
-
-  // Chart data endpoint
-  app.get("/api/charts/price-history", async (req, res) => {
-    try {
-      const range = req.query.range as string || '7d';
-      const now = new Date();
-      let startDate: Date;
-      
-      // Calculate date range
-      switch (range) {
-        case '1d':
-          startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-          break;
-        case '7d':
-          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          break;
-        case '30d':
-          startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-          break;
-        case '90d':
-          startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-          break;
-        case '1y':
-          startDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
-          break;
-        default:
-          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      }
-
-      // Get current prices for baseline
-      const currentPrices = await storage.getCurrentPrices();
-      const avgCurrentPrice = currentPrices.reduce((sum, p) => sum + parseFloat(p.currentPrice.price), 0) / currentPrices.length;
-      
-      // Generate realistic historical progression based on current price
-      const points = range === '1d' ? 24 : range === '7d' ? 168 : range === '30d' ? 720 : range === '90d' ? 360 : 365;
-      const intervalMs = (now.getTime() - startDate.getTime()) / points;
-      
-      const chartData = [];
-      for (let i = 0; i < points; i++) {
-        const timestamp = new Date(startDate.getTime() + i * intervalMs);
-        const progress = i / points;
-        
-        // Create realistic price progression that leads to current price
-        const volatility = range === '1d' ? 0.01 : range === '7d' ? 0.02 : 0.04;
-        const trendTowardsCurrent = (progress - 0.5) * 0.05; // Gentle trend toward current price
-        const marketCycle = Math.sin(progress * Math.PI * 4) * 0.03; // Market cycles
-        const randomWalk = (Math.random() - 0.5) * volatility;
-        
-        // Calculate price that progresses toward current price
-        const baselineShift = (1 - progress) * -0.02; // Start slightly lower
-        const totalChange = baselineShift + trendTowardsCurrent + marketCycle + randomWalk;
-        const price = avgCurrentPrice * (1 + totalChange);
-        
-        // Generate volume data
-        const baseVolume = 50000;
-        const volumeVariation = Math.sin(progress * Math.PI * 6) * 0.3;
-        const randomVolume = (Math.random() - 0.5) * 0.4;
-        const volume = baseVolume * (1 + volumeVariation + randomVolume);
-        
-        chartData.push({
-          timestamp: timestamp.toISOString(),
-          price: Math.round(price * 100) / 100,
-          volume: Math.round(volume),
-          exchange: "Market Average",
-          date: timestamp
-        });
-      }
-      
-      res.json(chartData);
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-      res.status(500).json({ message: "Failed to fetch chart data" });
-    }
-  });
-
-  // "Network right now" panel on /learn: real block-explorer facts only, no price.
   app.get("/api/network/now", async (_req, res) => {
     const data = await networkNowService.getNow();
     res.set("Cache-Control", "public, max-age=30");
@@ -389,53 +233,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Market data endpoint
-  app.get("/api/market/data", marketDataCache, async (req, res) => {
-    try {
-      const bitcoinData = await coinGeckoService.getBitcoinPrice();
-      const networkStats = await coinGeckoService.getBitcoinNetworkStats();
-      
-      // Generate fear and greed index based on market conditions
-      const price = bitcoinData.bitcoin.usd;
-      const change24h = bitcoinData.bitcoin.usd_24h_change;
-      const volume = bitcoinData.bitcoin.usd_24h_vol;
-      
-      // Calculate fear and greed (0-100, where >50 is greed)
-      let fearGreedIndex = 50;
-      if (change24h > 5) fearGreedIndex += 20;
-      else if (change24h > 2) fearGreedIndex += 10;
-      else if (change24h < -5) fearGreedIndex -= 20;
-      else if (change24h < -2) fearGreedIndex -= 10;
-      
-      if (volume > 30000000000) fearGreedIndex += 5; // High volume adds confidence
-      fearGreedIndex = Math.max(0, Math.min(100, fearGreedIndex));
-      
-      // Fetch Bitcoin dominance from CoinGecko
-      const dominanceResponse = await fetch('https://api.coingecko.com/api/v3/global');
-      const globalData = await dominanceResponse.json();
-      const btcDominance = globalData.data?.market_cap_percentage?.btc || 42.5;
-      
-      // Fetch real market cap from CoinGecko
-      const marketCapResponse = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin');
-      const coinData = await marketCapResponse.json();
-      const realMarketCap = coinData.market_data?.market_cap?.usd || (price * 19.8 * 1000000);
-      
-      const marketData = {
-        fearGreedIndex: Math.round(fearGreedIndex),
-        volume24h: `$${(volume / 1000000000).toFixed(1)}B`,
-        marketCap: `$${(realMarketCap / 1000000000000).toFixed(2)}T`,
-        dominance: btcDominance,
-        activeAddresses: null
-      };
-      
-      res.json(marketData);
-    } catch (error) {
-      console.error("Market data error:", error);
-      res.status(500).json({ message: "Failed to fetch market data" });
-    }
-  });
-
-  // News routes - Updated to use live CryptoNews API with 5-minute updates
-  // Bitcoin headlines from publishers' RSS feeds (see liveNewsService). Empty list + status when unavailable.
   app.get("/api/news", async (req, res) => {
     try {
       const limit = Math.min(Math.max(parseInt(req.query.limit as string) || 15, 1), 50);
